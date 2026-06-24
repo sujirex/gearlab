@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Spur Gear Calculator — GearLab</title>
+<link rel="icon" href="favicon.svg"/>
+<link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+<script src="js/common.js"></script>
+<script>buildNav('spur-gear');</script>
+<div class="main-content">
+  <div class="page-header"><div>
+    <div class="page-title">Spur Gear Geometry Calculator</div>
+    <div class="page-sub">Full dimensional analysis for external spur gears — ISO 54 / DIN 780 standard</div>
+  </div></div>
+
+  <div class="calc-grid">
+    <!-- INPUT PANEL -->
+    <div>
+      <div class="card card-body input-panel">
+        <div class="field-group">
+          <div class="field-label">Module (m) <span>— ISO standard</span></div>
+          <select id="inp-module">
+            <option value="1">m = 1</option>
+            <option value="1.25">m = 1.25</option>
+            <option value="1.5">m = 1.5</option>
+            <option value="2" selected>m = 2</option>
+            <option value="2.5">m = 2.5</option>
+            <option value="3">m = 3</option>
+            <option value="4">m = 4</option>
+            <option value="5">m = 5</option>
+            <option value="6">m = 6</option>
+            <option value="8">m = 8</option>
+            <option value="10">m = 10</option>
+            <option value="12">m = 12</option>
+            <option value="16">m = 16</option>
+            <option value="20">m = 20</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <div class="field-label">Pinion Teeth (z&#8321;)</div>
+          <div class="field-row">
+            <input type="number" id="inp-z1" value="20" min="6" max="500" step="1"/>
+            <div class="field-unit">teeth</div>
+          </div>
+        </div>
+        <div class="field-group">
+          <div class="field-label">Gear Teeth (z&#8322;)</div>
+          <div class="field-row">
+            <input type="number" id="inp-z2" value="40" min="6" max="500" step="1"/>
+            <div class="field-unit">teeth</div>
+          </div>
+        </div>
+        <div class="field-group">
+          <div class="field-label">Pressure Angle (&alpha;)</div>
+          <select id="inp-alpha">
+            <option value="14.5">14.5° (old standard)</option>
+            <option value="20" selected>20° (ISO standard)</option>
+            <option value="25">25° (heavy load)</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <div class="field-label">Face Width (b) <span>— optional, for force calc</span></div>
+          <div class="field-row">
+            <input type="number" id="inp-b" value="40" min="1" step="1"/>
+            <div class="field-unit">mm</div>
+          </div>
+        </div>
+        <hr class="field-divider"/>
+        <div class="field-group">
+          <div class="field-label">Input Speed (n&#8321;) <span>— optional</span></div>
+          <div class="field-row">
+            <input type="number" id="inp-n1" value="1450" min="1" step="1"/>
+            <div class="field-unit">RPM</div>
+          </div>
+        </div>
+        <button class="btn-calc" onclick="calculate()">Calculate All Dimensions</button>
+      </div>
+
+      <!-- Formula reference -->
+      <div class="formula-card mt-16">
+        <h4>Key Formulas</h4>
+        <div class="formula-row"><span class="formula-name">Pitch Circle Dia.</span><span class="formula-expr">d = m &times; z</span></div>
+        <div class="formula-row"><span class="formula-name">Outside Diameter</span><span class="formula-expr">da = m &times; (z + 2)</span></div>
+        <div class="formula-row"><span class="formula-name">Root Diameter</span><span class="formula-expr">df = m &times; (z - 2.5)</span></div>
+        <div class="formula-row"><span class="formula-name">Base Circle Dia.</span><span class="formula-expr">db = d &times; cos(&alpha;)</span></div>
+        <div class="formula-row"><span class="formula-name">Center Distance</span><span class="formula-expr">a = m &times; (z&#8321; + z&#8322;) / 2</span></div>
+        <div class="formula-row"><span class="formula-name">Circular Pitch</span><span class="formula-expr">p = &pi; &times; m</span></div>
+        <div class="formula-row"><span class="formula-name">Whole Depth</span><span class="formula-expr">h = 2.25 &times; m</span></div>
+      </div>
+    </div>
+
+    <!-- RESULT PANEL -->
+    <div class="result-panel">
+
+      <!-- Gear Ratio -->
+      <div class="card card-body">
+        <div class="result-section-title">Gear Ratio &amp; Speed</div>
+        <div class="result-grid">
+          <div class="result-item highlight">
+            <div class="result-label">Gear Ratio (u)</div>
+            <div class="result-value large" id="res-ratio">—</div>
+            <div class="result-unit">z&#8322; / z&#8321;</div>
+          </div>
+          <div class="result-item highlight">
+            <div class="result-label">Output Speed (n&#8322;)</div>
+            <div class="result-value large" id="res-n2">—</div>
+            <div class="result-unit">RPM</div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Center Distance (a)</div>
+            <div class="result-value" id="res-a">—</div>
+            <div class="result-unit">mm</div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Contact Ratio (&epsilon;)</div>
+            <div class="result-value" id="res-cr">—</div>
+            <div class="result-unit">&gt; 1.2 recommended</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pinion (gear 1) -->
+      <div class="card card-body">
+        <div class="result-section-title">Pinion (Driver — z&#8321;)</div>
+        <div class="result-grid">
+          <div class="result-item"><div class="result-label">Pitch Circle Dia. (d&#8321;)</div><div class="result-value" id="res-d1">—</div><div class="result-unit">mm</div></div>
+          <div class="result-item"><div class="result-label">Outside Dia. (da&#8321;)</div><div class="result-value" id="res-da1">—</div><div class="result-unit">mm</div></div>
+          <div class="result-item"><div class="result-label">Root Dia. (df&#8321;)</div><div class="result-value" id="res-df1">—</div><div class="result-unit">mm</div></div>
+          <div class="result-item"><div class="result-label">Base Circle (db&#8321;)</div><div class="result-value" id="res-db1">—</div><div class="result-unit">mm</div></div>
+        </div>
+      </div>
+
+      <!-- Gear (gear 2) -->
+      <div class="card card-body">
+        <div class="result-section-title">Gear (Driven — z&#8322;)</div>
+        <div class="result-grid">
+          <div class="result-item"><div class="result-label">Pitch Circle Dia. (d&#8322;)</div><div class="result-value" id="res-d2">—</div><div class="result-unit">mm</div></div>
+          <div class="result-item"><div class="result-label">Outside Dia. (da&#8322;)</div><div class="result-value" id="res-da2">—</div><div class="result-unit">mm</div></div>
+          <div class="result-item"><div class="result-label">Root Dia. (df&#8322;)</div><div class="result-value" id="res-df2">—</div><div class="result-unit">mm</div></div>
+          <div class="result-item"><div class="result-label">Base Circle (db&#8322;)</div><div class="result-value" id="res-db2">—</div><div class="result-unit">mm</div></div>
+        </div>
+      </div>
+
+      <!-- Common dimensions -->
+      <div class="card card-body">
+        <div class="result-section-title">Common Tooth Dimensions</div>
+        <div class="result-grid-3">
+          <div class="result-item"><div class="result-label">Addendum (ha)</div><div class="result-value" id="res-ha">—</div><div class="result-unit">mm = 1.0 &times; m</div></div>
+          <div class="result-item"><div class="result-label">Dedendum (hf)</div><div class="result-value" id="res-hf">—</div><div class="result-unit">mm = 1.25 &times; m</div></div>
+          <div class="result-item"><div class="result-label">Whole Depth (h)</div><div class="result-value" id="res-h">—</div><div class="result-unit">mm = 2.25 &times; m</div></div>
+          <div class="result-item"><div class="result-label">Circular Pitch (p)</div><div class="result-value" id="res-p">—</div><div class="result-unit">mm</div></div>
+          <div class="result-item"><div class="result-label">Tip Clearance (c)</div><div class="result-value" id="res-c">—</div><div class="result-unit">mm = 0.25 &times; m</div></div>
+          <div class="result-item"><div class="result-label">Face Width (b)</div><div class="result-value" id="res-b">—</div><div class="result-unit">mm</div></div>
+        </div>
+      </div>
+
+      <!-- Live SVG diagram -->
+      <div class="card card-body">
+        <div class="result-section-title">Pitch Circle Diagram</div>
+        <div class="diagram-wrap">
+          <svg id="gear-diagram" viewBox="0 0 320 160" xmlns="http://www.w3.org/2000/svg" width="320" height="160">
+            <line id="dg-axis" x1="10" y1="80" x2="310" y2="80" stroke="var(--border)" stroke-width="0.5" stroke-dasharray="4,3"/>
+            <circle id="dg-d1"  cx="80"  cy="80" r="40" fill="none" stroke="var(--primary)" stroke-width="1.5"/>
+            <circle id="dg-da1" cx="80"  cy="80" r="44" fill="none" stroke="var(--primary)" stroke-width=".7" stroke-dasharray="3,2" opacity=".6"/>
+            <circle id="dg-df1" cx="80"  cy="80" r="35" fill="none" stroke="var(--primary)" stroke-width=".7" stroke-dasharray="2,3" opacity=".4"/>
+            <circle id="dg-d2"  cx="160" cy="80" r="40" fill="none" stroke="var(--teal-br)" stroke-width="1.5"/>
+            <circle id="dg-da2" cx="160" cy="80" r="44" fill="none" stroke="var(--teal-br)" stroke-width=".7" stroke-dasharray="3,2" opacity=".6"/>
+            <circle id="dg-df2" cx="160" cy="80" r="35" fill="none" stroke="var(--teal-br)" stroke-width=".7" stroke-dasharray="2,3" opacity=".4"/>
+            <text id="dg-label1" x="80" y="83" text-anchor="middle" fill="var(--primary)" font-size="10" font-weight="700">Pinion</text>
+            <text id="dg-label2" x="200" y="83" text-anchor="middle" fill="var(--teal-br)" font-size="10" font-weight="700">Gear</text>
+          </svg>
+        </div>
+        <div class="mt-8 text-sm text-muted" style="text-align:center">
+          Solid = PCD &nbsp;|&nbsp; Dashed outer = Outside Dia &nbsp;|&nbsp; Dashed inner = Root Dia
+        </div>
+      </div>
+
+      <div class="tip-box">
+        <strong>Contact Ratio</strong> should be &gt; 1.2 for smooth operation. Values below 1.0 indicate
+        non-conjugate action. Recommended: 1.4–1.8 for standard industrial gears.
+        Increase face width or module to improve contact ratio.
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function calculate() {
+  const m  = parseFloat(document.getElementById('inp-module').value);
+  const z1 = parseFloat(document.getElementById('inp-z1').value);
+  const z2 = parseFloat(document.getElementById('inp-z2').value);
+  const alpha = parseFloat(document.getElementById('inp-alpha').value);
+  const b  = parseFloat(document.getElementById('inp-b').value);
+  const n1 = parseFloat(document.getElementById('inp-n1').value);
+
+  const aRad = toRad(alpha);
+
+  // Dimensions
+  const d1  = m * z1;
+  const d2  = m * z2;
+  const da1 = m * (z1 + 2);
+  const da2 = m * (z2 + 2);
+  const df1 = m * (z1 - 2.5);
+  const df2 = m * (z2 - 2.5);
+  const db1 = d1 * Math.cos(aRad);
+  const db2 = d2 * Math.cos(aRad);
+  const ha  = m;
+  const hf  = 1.25 * m;
+  const h   = 2.25 * m;
+  const p   = Math.PI * m;
+  const c   = 0.25 * m;
+  const a   = m * (z1 + z2) / 2;
+  const u   = z2 / z1;
+  const n2  = n1 / u;
+
+  // Contact ratio
+  const eps = (Math.sqrt(da1*da1 - db1*db1) + Math.sqrt(da2*da2 - db2*db2) - 2*a*Math.sin(aRad))
+              / (2 * Math.PI * m * Math.cos(aRad));
+
+  setResult('res-ratio', u, 3);
+  setResult('res-n2', n2, 1);
+  setResult('res-a', a, 2);
+  setResult('res-cr', eps, 3);
+  setResult('res-d1', d1, 2);
+  setResult('res-da1', da1, 2);
+  setResult('res-df1', df1, 2);
+  setResult('res-db1', db1, 3);
+  setResult('res-d2', d2, 2);
+  setResult('res-da2', da2, 2);
+  setResult('res-df2', df2, 2);
+  setResult('res-db2', db2, 3);
+  setResult('res-ha', ha, 2);
+  setResult('res-hf', hf, 2);
+  setResult('res-h', h, 2);
+  setResult('res-p', p, 3);
+  setResult('res-c', c, 2);
+  document.getElementById('res-b').textContent = b;
+
+  // Update SVG diagram
+  updateDiagram(d1, da1, df1, d2, da2, df2, a);
+}
+
+function updateDiagram(d1, da1, df1, d2, da2, df2, a) {
+  const svgW = 320, svgH = 160, cx = svgH/2;
+  const scale = Math.min((svgW * 0.88) / (da1 + da2), (svgH * 0.88) / Math.max(da1, da2));
+  const r1 = d1/2*scale, ra1 = da1/2*scale, rf1 = df1/2*scale;
+  const r2 = d2/2*scale, ra2 = da2/2*scale, rf2 = df2/2*scale;
+  const x1 = svgW/2 - a/2*scale, x2 = svgW/2 + a/2*scale;
+  const y = svgH/2;
+
+  const set = (id, attr, val) => { const el=document.getElementById(id); if(el) el.setAttribute(attr, val); };
+  set('dg-d1',  'cx', x1); set('dg-d1',  'cy', y); set('dg-d1',  'r', r1);
+  set('dg-da1', 'cx', x1); set('dg-da1', 'cy', y); set('dg-da1', 'r', ra1);
+  set('dg-df1', 'cx', x1); set('dg-df1', 'cy', y); set('dg-df1', 'r', rf1);
+  set('dg-d2',  'cx', x2); set('dg-d2',  'cy', y); set('dg-d2',  'r', r2);
+  set('dg-da2', 'cx', x2); set('dg-da2', 'cy', y); set('dg-da2', 'r', ra2);
+  set('dg-df2', 'cx', x2); set('dg-df2', 'cy', y); set('dg-df2', 'r', rf2);
+  set('dg-label1', 'x', x1); set('dg-label1', 'y', y+3);
+  set('dg-label2', 'x', x2); set('dg-label2', 'y', y+3);
+}
+
+// Auto-calculate on load and on any input change
+document.querySelectorAll('input, select').forEach(el => el.addEventListener('input', calculate));
+calculate();
+</script>
+</body></html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Engineering Guide — GearLab</title>
+<link rel="icon" href="favicon.svg"/>
+<link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+<script src="js/common.js"></script>
+<script>buildNav('guide');</script>
+<div class="main-content">
+  <div class="page-header"><div>
+    <div class="page-title">Engineering Reference Guide</div>
+    <div class="page-sub">Formulas, standards, and material data for gearbox engineers</div>
+  </div></div>
+
+  <div class="grid-2">
+    <div>
+      <!-- Standard Modules -->
+      <div class="card card-body mb-16">
+        <h3 style="color:var(--primary);margin-bottom:12px;font-size:14px">ISO 54 — Standard Modules</h3>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px">
+          <% [1,1.25,1.5,2,2.5,3,4,5,6,8,10,12,16,20].forEach(m=> { %><% }) %>
+        </div>
+        <div id="mod-chips"></div>
+        <div class="tip-box mt-8">Always select module from this preferred series. Non-standard modules are not interchangeable with standard tooling.</div>
+      </div>
+
+      <!-- Gear Formulas -->
+      <div class="card card-body mb-16">
+        <h3 style="color:var(--primary);margin-bottom:12px;font-size:14px">Spur Gear — Key Formulas</h3>
+        <div class="formula-card" style="background:none;padding:0;border:none">
+          <div class="formula-row"><span class="formula-name">Pitch Circle Diameter</span><span class="formula-expr">d = m × z</span></div>
+          <div class="formula-row"><span class="formula-name">Outside Diameter</span><span class="formula-expr">da = m × (z + 2)</span></div>
+          <div class="formula-row"><span class="formula-name">Root Diameter</span><span class="formula-expr">df = m × (z − 2.5)</span></div>
+          <div class="formula-row"><span class="formula-name">Base Circle</span><span class="formula-expr">db = d × cos(α)</span></div>
+          <div class="formula-row"><span class="formula-name">Center Distance</span><span class="formula-expr">a = m(z₁+z₂)/2</span></div>
+          <div class="formula-row"><span class="formula-name">Addendum</span><span class="formula-expr">ha = 1.0 × m</span></div>
+          <div class="formula-row"><span class="formula-name">Dedendum</span><span class="formula-expr">hf = 1.25 × m</span></div>
+          <div class="formula-row"><span class="formula-name">Whole Depth</span><span class="formula-expr">h = 2.25 × m</span></div>
+          <div class="formula-row"><span class="formula-name">Circular Pitch</span><span class="formula-expr">p = π × m</span></div>
+          <div class="formula-row"><span class="formula-name">Tip Clearance</span><span class="formula-expr">c = 0.25 × m</span></div>
+        </div>
+      </div>
+
+      <!-- Power-Torque -->
+      <div class="card card-body mb-16">
+        <h3 style="color:var(--primary);margin-bottom:12px;font-size:14px">Power, Torque &amp; Speed</h3>
+        <div class="formula-card" style="background:none;padding:0;border:none">
+          <div class="formula-row"><span class="formula-name">Torque (N·m)</span><span class="formula-expr">T = P×9549.3/n</span></div>
+          <div class="formula-row"><span class="formula-name">Power (kW)</span><span class="formula-expr">P = T×n/9549.3</span></div>
+          <div class="formula-row"><span class="formula-name">Angular velocity</span><span class="formula-expr">ω = 2πn/60 rad/s</span></div>
+          <div class="formula-row"><span class="formula-name">Tangential force</span><span class="formula-expr">Ft = 2T×1000/d (N)</span></div>
+          <div class="formula-row"><span class="formula-name">Radial force</span><span class="formula-expr">Fr = Ft×tan(α)</span></div>
+          <div class="formula-row"><span class="formula-name">Normal force</span><span class="formula-expr">Fn = Ft/cos(α)</span></div>
+          <div class="formula-row"><span class="formula-name">1 HP (metric)</span><span class="formula-expr">= 0.7355 kW</span></div>
+          <div class="formula-row"><span class="formula-name">1 HP (imperial)</span><span class="formula-expr">= 0.7457 kW</span></div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <!-- Pressure angles -->
+      <div class="card card-body mb-16">
+        <h3 style="color:var(--primary);margin-bottom:12px;font-size:14px">Pressure Angle Selection Guide</h3>
+        <div class="formula-row"><span class="formula-name">14.5°</span><span class="formula-expr">Legacy standard. Weak root, quiet mesh</span></div>
+        <div class="formula-row"><span class="formula-name">20°</span><span class="formula-expr">ISO standard. Best balance of strength &amp; smoothness</span></div>
+        <div class="formula-row"><span class="formula-name">25°</span><span class="formula-expr">Heavy load applications. Stronger root, more noise</span></div>
+      </div>
+
+      <!-- Efficiency table -->
+      <div class="card card-body mb-16">
+        <h3 style="color:var(--primary);margin-bottom:12px;font-size:14px">Typical Stage Efficiency</h3>
+        <div class="formula-row"><span class="formula-name">Spur gear pair</span><span class="formula-expr">98.5 – 99.0%</span></div>
+        <div class="formula-row"><span class="formula-name">Helical gear pair</span><span class="formula-expr">98.0 – 99.0%</span></div>
+        <div class="formula-row"><span class="formula-name">Bevel gear pair</span><span class="formula-expr">97.0 – 99.0%</span></div>
+        <div class="formula-row"><span class="formula-name">Worm gear (high ratio)</span><span class="formula-expr">50 – 80%</span></div>
+        <div class="formula-row"><span class="formula-name">Worm gear (low ratio)</span><span class="formula-expr">80 – 92%</span></div>
+        <div class="formula-row"><span class="formula-name">Planetary stage</span><span class="formula-expr">97.0 – 99.5%</span></div>
+        <div class="formula-row"><span class="formula-name">Rolling bearing</span><span class="formula-expr">99.5% per bearing</span></div>
+      </div>
+
+      <!-- Common unit conversions -->
+      <div class="card card-body mb-16">
+        <h3 style="color:var(--primary);margin-bottom:12px;font-size:14px">Essential Unit Conversions</h3>
+        <div class="formula-row"><span class="formula-name">1 kW</span><span class="formula-expr">= 1.3596 HP (metric) = 1.3410 HP (imp)</span></div>
+        <div class="formula-row"><span class="formula-name">1 N·m</span><span class="formula-expr">= 0.1020 kgf·m = 0.7376 lb·ft</span></div>
+        <div class="formula-row"><span class="formula-name">1 MPa</span><span class="formula-expr">= 1 N/mm² = 145.04 psi = 10 bar</span></div>
+        <div class="formula-row"><span class="formula-name">1 inch</span><span class="formula-expr">= 25.4 mm</span></div>
+        <div class="formula-row"><span class="formula-name">1 kgf</span><span class="formula-expr">= 9.80665 N</span></div>
+        <div class="formula-row"><span class="formula-name">1 rpm</span><span class="formula-expr">= 0.10472 rad/s</span></div>
+      </div>
+
+      <!-- Planetary gear -->
+      <div class="card card-body">
+        <h3 style="color:var(--primary);margin-bottom:12px;font-size:14px">Planetary Gear Ratios</h3>
+        <div class="formula-row"><span class="formula-name">Ring teeth rule</span><span class="formula-expr">Zr = Zs + 2 × Zp</span></div>
+        <div class="formula-row"><span class="formula-name">Fixed ring → carrier</span><span class="formula-expr">i = 1 + Zr/Zs</span></div>
+        <div class="formula-row"><span class="formula-name">Fixed carrier → ring</span><span class="formula-expr">i = −Zr/Zs</span></div>
+        <div class="formula-row"><span class="formula-name">Fixed sun → carrier</span><span class="formula-expr">i = Zr/(Zr+Zs)</span></div>
+        <div class="formula-row"><span class="formula-name">Assembly condition</span><span class="formula-expr">(Zs+Zr) / N_planets = integer</span></div>
+        <div class="tip-box mt-8">Typical planetary ratios: 3:1 to 10:1 per stage. Two-stage planetary can achieve 100:1.</div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+const mods=[1,1.25,1.5,2,2.5,3,4,5,6,8,10,12,16,20];
+document.getElementById('mod-chips').innerHTML=mods.map(m=>
+  `<span style="background:var(--teal-bg);border:1px solid rgba(13,200,200,.25);color:var(--primary);
+    padding:3px 10px;border-radius:16px;font-size:11px;font-weight:700;display:inline-block;margin:2px">m=${m}</span>`
+).join('');
+</script>
+</body></html>

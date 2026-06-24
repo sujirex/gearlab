@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Gear Ratio Calculator — GearLab</title>
+<link rel="icon" href="favicon.svg"/>
+<link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+<script src="js/common.js"></script>
+<script>buildNav('gear-ratio');</script>
+<div class="main-content">
+  <div class="page-header"><div>
+    <div class="page-title">Gear Ratio &amp; Speed Calculator</div>
+    <div class="page-sub">Single stage, multi-stage, and planetary gear train analysis</div>
+  </div></div>
+
+  <!-- Mode tabs -->
+  <div style="display:flex;gap:8px;margin-bottom:20px">
+    <button class="tab-btn active" onclick="setMode('single')">Single Stage</button>
+    <button class="tab-btn" onclick="setMode('multi')">Multi-Stage</button>
+    <button class="tab-btn" onclick="setMode('planetary')">Planetary</button>
+  </div>
+
+  <!-- SINGLE STAGE -->
+  <div id="mode-single">
+    <div class="calc-grid">
+      <div>
+        <div class="card card-body input-panel">
+          <div class="field-group"><div class="field-label">Driver Teeth (z&#8321;)</div>
+            <div class="field-row"><input type="number" id="s-z1" value="20" min="6" step="1"/><div class="field-unit">teeth</div></div></div>
+          <div class="field-group"><div class="field-label">Driven Teeth (z&#8322;)</div>
+            <div class="field-row"><input type="number" id="s-z2" value="60" min="6" step="1"/><div class="field-unit">teeth</div></div></div>
+          <div class="field-group"><div class="field-label">Input Speed (n&#8321;)</div>
+            <div class="field-row"><input type="number" id="s-n1" value="1450" min="1" step="1"/><div class="field-unit">RPM</div></div></div>
+          <hr class="field-divider"/>
+          <div class="field-group"><div class="field-label">Input Power <span>— optional</span></div>
+            <div class="field-row"><input type="number" id="s-pow" placeholder="e.g. 15" min="0" step="0.1"/><div class="field-unit">kW</div></div></div>
+          <div class="field-group"><div class="field-label">Stage Efficiency</div>
+            <div class="field-row"><input type="number" id="s-eff" value="98.5" min="50" max="100" step="0.1"/><div class="field-unit">%</div></div></div>
+          <button class="btn-calc" onclick="calcSingle()">Calculate</button>
+        </div>
+        <div class="formula-card mt-16">
+          <h4>Single Stage Formulas</h4>
+          <div class="formula-row"><span class="formula-name">Gear Ratio</span><span class="formula-expr">i = z&#8322; / z&#8321;</span></div>
+          <div class="formula-row"><span class="formula-name">Output Speed</span><span class="formula-expr">n&#8322; = n&#8321; / i</span></div>
+          <div class="formula-row"><span class="formula-name">Output Torque</span><span class="formula-expr">T&#8322; = T&#8321; &times; i &times; &eta;</span></div>
+          <div class="formula-row"><span class="formula-name">Output Power</span><span class="formula-expr">P&#8322; = P&#8321; &times; &eta; / 100</span></div>
+        </div>
+      </div>
+      <div class="result-panel">
+        <div class="card card-body">
+          <div class="result-section-title">Gear Ratio</div>
+          <div class="result-grid">
+            <div class="result-item highlight"><div class="result-label">Gear Ratio (i)</div><div class="result-value large" id="s-res-i">—</div><div class="result-unit">reduction</div></div>
+            <div class="result-item highlight"><div class="result-label">Output Speed</div><div class="result-value large" id="s-res-n2">—</div><div class="result-unit">RPM</div></div>
+            <div class="result-item"><div class="result-label">Input Torque</div><div class="result-value" id="s-res-t1">—</div><div class="result-unit">N·m (at given kW)</div></div>
+            <div class="result-item"><div class="result-label">Output Torque</div><div class="result-value" id="s-res-t2">—</div><div class="result-unit">N·m</div></div>
+            <div class="result-item"><div class="result-label">Output Power</div><div class="result-value" id="s-res-p2">—</div><div class="result-unit">kW</div></div>
+            <div class="result-item"><div class="result-label">Power Loss</div><div class="result-value" id="s-res-ploss">—</div><div class="result-unit">kW</div></div>
+          </div>
+        </div>
+        <div class="tip-box">
+          Spur gear pair efficiency: typically <strong>98.5–99%</strong> per stage.
+          Helical: 98–99%. Bevel: 97–99%. Worm: 50–90% depending on lead angle.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MULTI-STAGE -->
+  <div id="mode-multi" style="display:none">
+    <div class="calc-grid">
+      <div>
+        <div class="card card-body input-panel">
+          <div class="field-group"><div class="field-label">Input Speed (n&#8321;)</div>
+            <div class="field-row"><input type="number" id="m-n1" value="1450" min="1" step="1"/><div class="field-unit">RPM</div></div></div>
+          <div class="field-group"><div class="field-label">Input Power</div>
+            <div class="field-row"><input type="number" id="m-pow" value="15" min="0" step="0.1"/><div class="field-unit">kW</div></div></div>
+          <hr class="field-divider"/>
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-muted);margin-bottom:6px">Stage 1</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+            <div class="field-group"><div class="field-label">z&#8321;</div><input type="number" id="m-s1z1" value="20" min="6"/></div>
+            <div class="field-group"><div class="field-label">z&#8322;</div><input type="number" id="m-s1z2" value="60" min="6"/></div>
+            <div class="field-group"><div class="field-label">&eta; %</div><input type="number" id="m-s1e" value="98.5" min="50" max="100"/></div>
+          </div>
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-muted);margin:8px 0 6px">Stage 2</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+            <div class="field-group"><div class="field-label">z&#8321;</div><input type="number" id="m-s2z1" value="18" min="6"/></div>
+            <div class="field-group"><div class="field-label">z&#8322;</div><input type="number" id="m-s2z2" value="72" min="6"/></div>
+            <div class="field-group"><div class="field-label">&eta; %</div><input type="number" id="m-s2e" value="98.5" min="50" max="100"/></div>
+          </div>
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-muted);margin:8px 0 6px">Stage 3 <span style="font-weight:400;color:var(--text-dim)">(optional)</span></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+            <div class="field-group"><div class="field-label">z&#8321;</div><input type="number" id="m-s3z1" placeholder="skip" min="6"/></div>
+            <div class="field-group"><div class="field-label">z&#8322;</div><input type="number" id="m-s3z2" placeholder="skip" min="6"/></div>
+            <div class="field-group"><div class="field-label">&eta; %</div><input type="number" id="m-s3e" value="98.5" min="50" max="100"/></div>
+          </div>
+          <button class="btn-calc" onclick="calcMulti()">Calculate</button>
+        </div>
+      </div>
+      <div class="result-panel">
+        <div class="card card-body">
+          <div class="result-section-title">Multi-Stage Results</div>
+          <div class="result-grid">
+            <div class="result-item highlight"><div class="result-label">Total Ratio</div><div class="result-value large" id="m-res-itot">—</div><div class="result-unit">overall</div></div>
+            <div class="result-item highlight"><div class="result-label">Final Output Speed</div><div class="result-value large" id="m-res-nfinal">—</div><div class="result-unit">RPM</div></div>
+            <div class="result-item"><div class="result-label">Stage 1 Ratio</div><div class="result-value" id="m-res-i1">—</div><div class="result-unit"></div></div>
+            <div class="result-item"><div class="result-label">After Stage 1</div><div class="result-value" id="m-res-n1out">—</div><div class="result-unit">RPM</div></div>
+            <div class="result-item"><div class="result-label">Stage 2 Ratio</div><div class="result-value" id="m-res-i2">—</div><div class="result-unit"></div></div>
+            <div class="result-item"><div class="result-label">After Stage 2</div><div class="result-value" id="m-res-n2out">—</div><div class="result-unit">RPM</div></div>
+            <div class="result-item"><div class="result-label">Stage 3 Ratio</div><div class="result-value" id="m-res-i3">—</div><div class="result-unit"></div></div>
+            <div class="result-item"><div class="result-label">After Stage 3</div><div class="result-value" id="m-res-n3out">—</div><div class="result-unit">RPM</div></div>
+            <div class="result-item"><div class="result-label">Overall Efficiency</div><div class="result-value" id="m-res-etot">—</div><div class="result-unit">%</div></div>
+            <div class="result-item"><div class="result-label">Output Power</div><div class="result-value" id="m-res-pout">—</div><div class="result-unit">kW</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PLANETARY -->
+  <div id="mode-planetary" style="display:none">
+    <div class="calc-grid">
+      <div>
+        <div class="card card-body input-panel">
+          <div class="tip-box" style="margin-bottom:8px">
+            Enter sun (s), planet (p), and ring (r) teeth. Ring teeth = Sun + 2&times;Planet.
+          </div>
+          <div class="field-group"><div class="field-label">Sun Gear Teeth (Zs)</div>
+            <div class="field-row"><input type="number" id="p-zs" value="20" min="6" step="1"/><div class="field-unit">teeth</div></div></div>
+          <div class="field-group"><div class="field-label">Planet Gear Teeth (Zp)</div>
+            <div class="field-row"><input type="number" id="p-zp" value="30" min="6" step="1"/><div class="field-unit">teeth</div></div></div>
+          <div class="field-group"><div class="field-label">Ring Gear Teeth (Zr) <span>— auto: Zs + 2&times;Zp</span></div>
+            <div class="field-row"><input type="number" id="p-zr" value="80" min="6" step="1" readonly style="opacity:.6"/><div class="field-unit">teeth</div></div></div>
+          <div class="field-group"><div class="field-label">Input Speed</div>
+            <div class="field-row"><input type="number" id="p-n1" value="1450" min="1" step="1"/><div class="field-unit">RPM</div></div></div>
+          <div class="field-group"><div class="field-label">Configuration</div>
+            <select id="p-config">
+              <option value="1">Fixed Ring → Output: Carrier (most common)</option>
+              <option value="2">Fixed Carrier → Output: Ring (reverse)</option>
+              <option value="3">Fixed Sun → Input: Ring → Output: Carrier</option>
+            </select>
+          </div>
+          <button class="btn-calc" onclick="calcPlanetary()">Calculate</button>
+        </div>
+        <div class="formula-card mt-16">
+          <h4>Planetary Gear Ratios</h4>
+          <div class="formula-row"><span class="formula-name">Fixed Ring (Config 1)</span><span class="formula-expr">i = 1 + Zr/Zs</span></div>
+          <div class="formula-row"><span class="formula-name">Fixed Carrier (Config 2)</span><span class="formula-expr">i = &minus;Zr/Zs</span></div>
+          <div class="formula-row"><span class="formula-name">Fixed Sun (Config 3)</span><span class="formula-expr">i = Zr/(Zr+Zs)</span></div>
+          <div class="formula-row"><span class="formula-name">Ring teeth check</span><span class="formula-expr">Zr = Zs + 2&times;Zp</span></div>
+        </div>
+      </div>
+      <div class="result-panel">
+        <div class="card card-body">
+          <div class="result-section-title">Planetary Results</div>
+          <div class="result-grid">
+            <div class="result-item highlight"><div class="result-label">Gear Ratio</div><div class="result-value large" id="p-res-i">—</div><div class="result-unit">reduction</div></div>
+            <div class="result-item highlight"><div class="result-label">Output Speed</div><div class="result-value large" id="p-res-nout">—</div><div class="result-unit">RPM</div></div>
+            <div class="result-item"><div class="result-label">Sun Teeth</div><div class="result-value" id="p-res-zs">—</div></div>
+            <div class="result-item"><div class="result-label">Planet Teeth</div><div class="result-value" id="p-res-zp">—</div></div>
+            <div class="result-item"><div class="result-label">Ring Teeth</div><div class="result-value" id="p-res-zr">—</div></div>
+            <div class="result-item"><div class="result-label">Configuration</div><div class="result-value" id="p-res-cfg" style="font-size:13px">—</div></div>
+          </div>
+          <div class="tip-box mt-16">
+            Planetary gearboxes achieve high ratios in compact size.
+            Number of planets typically 3 (for balanced load sharing).
+            Assembly condition: <strong>(Zs + Zr) / N&#8346; = integer</strong> where N&#8346; = number of planets.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.tab-btn { padding:8px 20px; border:1px solid var(--border); background:var(--bg-card);
+  color:var(--text-muted); border-radius:8px; cursor:pointer; font-size:13px; font-weight:600; transition:all var(--tr); }
+.tab-btn.active { background:var(--teal-bg); border-color:var(--primary); color:var(--primary); }
+.tab-btn:hover { border-color:var(--primary); color:var(--primary); }
+</style>
+
+<script>
+function setMode(m) {
+  ['single','multi','planetary'].forEach(id => {
+    document.getElementById('mode-'+id).style.display = id===m ? '' : 'none';
+  });
+  document.querySelectorAll('.tab-btn').forEach((b,i) => {
+    b.classList.toggle('active', ['single','multi','planetary'][i]===m);
+  });
+}
+
+function calcSingle() {
+  const z1=+document.getElementById('s-z1').value, z2=+document.getElementById('s-z2').value;
+  const n1=+document.getElementById('s-n1').value, pow=parseFloat(document.getElementById('s-pow').value)||0;
+  const eff=+document.getElementById('s-eff').value/100;
+  const i=z2/z1, n2=n1/i;
+  const t1=pow>0 ? pow*9549.3/n1 : null;
+  const t2=t1 ? t1*i*eff : null;
+  const p2=pow>0 ? pow*eff : null;
+  setResult('s-res-i', i, 3);
+  setResult('s-res-n2', n2, 1);
+  setResult('s-res-t1', t1, 1);
+  setResult('s-res-t2', t2, 1);
+  setResult('s-res-p2', p2, 2);
+  setResult('s-res-ploss', (p2 && pow) ? pow-p2 : null, 3);
+}
+
+function calcMulti() {
+  const n1=+document.getElementById('m-n1').value, pow=+document.getElementById('m-pow').value;
+  const stages=[
+    [+document.getElementById('m-s1z1').value, +document.getElementById('m-s1z2').value, +document.getElementById('m-s1e').value/100],
+    [+document.getElementById('m-s2z1').value, +document.getElementById('m-s2z2').value, +document.getElementById('m-s2e').value/100],
+  ];
+  const z3a=document.getElementById('m-s3z1').value, z3b=document.getElementById('m-s3z2').value;
+  if(z3a && z3b) stages.push([+z3a, +z3b, +document.getElementById('m-s3e').value/100]);
+
+  let n=n1, iTot=1, eTot=1;
+  stages.forEach((s,idx) => {
+    const i=s[1]/s[0]; iTot*=i; eTot*=s[2]; n/=i;
+    setResult(`m-res-i${idx+1}`, i, 3);
+    setResult(`m-res-n${idx+1}out`, n, 1);
+  });
+  if(stages.length < 3) { document.getElementById('m-res-i3').textContent='—'; document.getElementById('m-res-n3out').textContent='—'; }
+  setResult('m-res-itot', iTot, 3);
+  setResult('m-res-nfinal', n, 1);
+  setResult('m-res-etot', eTot*100, 2);
+  setResult('m-res-pout', pow*eTot, 2);
+}
+
+function calcPlanetary() {
+  const zs=+document.getElementById('p-zs').value, zp=+document.getElementById('p-zp').value;
+  const zr=zs+2*zp; document.getElementById('p-zr').value=zr;
+  const n1=+document.getElementById('p-n1').value;
+  const cfg=+document.getElementById('p-config').value;
+  let i, cfgName;
+  if(cfg===1){ i=1+zr/zs; cfgName='Fixed Ring, Output: Carrier'; }
+  else if(cfg===2){ i=-zr/zs; cfgName='Fixed Carrier, Output: Ring (reversed)'; }
+  else { i=zr/(zr+zs); cfgName='Fixed Sun, Input: Ring, Output: Carrier'; }
+  const nout=n1/Math.abs(i);
+  setResult('p-res-i', Math.abs(i), 3);
+  setResult('p-res-nout', nout, 1);
+  document.getElementById('p-res-zs').textContent=zs;
+  document.getElementById('p-res-zp').textContent=zp;
+  document.getElementById('p-res-zr').textContent=zr;
+  document.getElementById('p-res-cfg').textContent=cfgName;
+}
+
+// Wire auto-calc for sun/planet
+['p-zs','p-zp'].forEach(id => document.getElementById(id).addEventListener('input', () => {
+  const zs=+document.getElementById('p-zs').value, zp=+document.getElementById('p-zp').value;
+  if(zs>0&&zp>0) document.getElementById('p-zr').value=zs+2*zp;
+}));
+
+calcSingle();
+</script>
+</body></html>

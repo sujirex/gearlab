@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Power &amp; Torque Calculator — GearLab</title>
+<link rel="icon" href="favicon.svg"/>
+<link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+<script src="js/common.js"></script>
+<script>buildNav('power-torque');</script>
+<div class="main-content">
+  <div class="page-header"><div>
+    <div class="page-title">Power, Torque &amp; Speed Calculator</div>
+    <div class="page-sub">Enter any two known values — the third is calculated automatically</div>
+  </div></div>
+
+  <div class="calc-grid">
+    <!-- INPUTS -->
+    <div>
+      <div class="card card-body input-panel">
+        <div class="tip-box" style="margin-bottom:4px">
+          <strong>How to use:</strong> Enter any two of Power, Torque, or Speed.
+          Leave one field blank (or zero) — it will be calculated automatically.
+        </div>
+
+        <div class="field-group">
+          <div class="field-label">Power (P)</div>
+          <div class="field-row">
+            <input type="number" id="inp-kw" placeholder="e.g. 75" min="0" step="0.1"/>
+            <select id="sel-power-unit" style="width:70px">
+              <option value="kw">kW</option>
+              <option value="hp">HP</option>
+            </select>
+          </div>
+        </div>
+        <div class="field-group">
+          <div class="field-label">Torque (T)</div>
+          <div class="field-row">
+            <input type="number" id="inp-torque" placeholder="e.g. 494" min="0" step="0.1"/>
+            <select id="sel-torque-unit" style="width:70px">
+              <option value="nm">N·m</option>
+              <option value="kgfm">kgf·m</option>
+              <option value="lbft">lb·ft</option>
+            </select>
+          </div>
+        </div>
+        <div class="field-group">
+          <div class="field-label">Speed (n)</div>
+          <div class="field-row">
+            <input type="number" id="inp-rpm" placeholder="e.g. 1450" min="0" step="1"/>
+            <div class="field-unit">RPM</div>
+          </div>
+        </div>
+
+        <hr class="field-divider"/>
+        <div class="field-group">
+          <div class="field-label">Pitch Circle Diameter <span>— for force calculation</span></div>
+          <div class="field-row">
+            <input type="number" id="inp-pcd" placeholder="e.g. 200" min="1" step="1"/>
+            <div class="field-unit">mm</div>
+          </div>
+        </div>
+        <div class="field-group">
+          <div class="field-label">Pressure Angle (&alpha;)</div>
+          <select id="inp-alpha">
+            <option value="14.5">14.5°</option>
+            <option value="20" selected>20°</option>
+            <option value="25">25°</option>
+          </select>
+        </div>
+        <button class="btn-calc" onclick="calculate()">Calculate</button>
+        <button class="btn-calc" onclick="clearAll()" style="background:var(--plate);color:var(--text-muted);margin-top:6px">Clear All</button>
+      </div>
+
+      <div class="formula-card mt-16">
+        <h4>Formulas</h4>
+        <div class="formula-row"><span class="formula-name">Torque from Power</span><span class="formula-expr">T = P&times;9549.3 / n (kW, RPM)</span></div>
+        <div class="formula-row"><span class="formula-name">Power from Torque</span><span class="formula-expr">P = T&times;n / 9549.3 (kW)</span></div>
+        <div class="formula-row"><span class="formula-name">Speed from P &amp; T</span><span class="formula-expr">n = P&times;9549.3 / T</span></div>
+        <div class="formula-row"><span class="formula-name">Angular Velocity</span><span class="formula-expr">&omega; = 2&pi;n / 60 (rad/s)</span></div>
+        <div class="formula-row"><span class="formula-name">Tangential Force</span><span class="formula-expr">Ft = 2T&times;1000 / d (N)</span></div>
+        <div class="formula-row"><span class="formula-name">Radial Force</span><span class="formula-expr">Fr = Ft &times; tan(&alpha;)</span></div>
+        <div class="formula-row"><span class="formula-name">1 HP</span><span class="formula-expr">= 0.7457 kW</span></div>
+      </div>
+    </div>
+
+    <!-- RESULTS -->
+    <div class="result-panel">
+      <div class="card card-body">
+        <div class="result-section-title">Power &ndash; Torque &ndash; Speed Triangle</div>
+        <div class="result-grid">
+          <div class="result-item highlight">
+            <div class="result-label">Power (kW)</div>
+            <div class="result-value large" id="res-kw">—</div>
+            <div class="result-unit" id="res-kw-sub">kilowatts</div>
+          </div>
+          <div class="result-item highlight">
+            <div class="result-label">Power (HP)</div>
+            <div class="result-value large" id="res-hp">—</div>
+            <div class="result-unit">horsepower</div>
+          </div>
+          <div class="result-item highlight">
+            <div class="result-label">Torque (N·m)</div>
+            <div class="result-value large" id="res-nm">—</div>
+            <div class="result-unit">Newton-metres</div>
+          </div>
+          <div class="result-item highlight">
+            <div class="result-label">Speed (RPM)</div>
+            <div class="result-value large" id="res-rpm">—</div>
+            <div class="result-unit">rev/min</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card card-body">
+        <div class="result-section-title">Torque in Other Units</div>
+        <div class="result-grid">
+          <div class="result-item"><div class="result-label">kgf·m</div><div class="result-value" id="res-kgfm">—</div><div class="result-unit">kilogram-force metre</div></div>
+          <div class="result-item"><div class="result-label">lb·ft</div><div class="result-value" id="res-lbft">—</div><div class="result-unit">pound-force foot</div></div>
+          <div class="result-item"><div class="result-label">lb·in</div><div class="result-value" id="res-lbin">—</div><div class="result-unit">pound-force inch</div></div>
+          <div class="result-item"><div class="result-label">Angular Vel. (&omega;)</div><div class="result-value" id="res-omega">—</div><div class="result-unit">rad/s</div></div>
+        </div>
+      </div>
+
+      <div class="card card-body">
+        <div class="result-section-title">Gear Forces at PCD</div>
+        <div class="result-grid">
+          <div class="result-item highlight">
+            <div class="result-label">Tangential Force (Ft)</div>
+            <div class="result-value" id="res-ft">—</div>
+            <div class="result-unit">N &nbsp;(driving force)</div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Radial Force (Fr)</div>
+            <div class="result-value" id="res-fr">—</div>
+            <div class="result-unit">N &nbsp;(separating force)</div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Normal Force (Fn)</div>
+            <div class="result-value" id="res-fn">—</div>
+            <div class="result-unit">N &nbsp;(along tooth normal)</div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">PCD used</div>
+            <div class="result-value" id="res-pcd-used">—</div>
+            <div class="result-unit">mm</div>
+          </div>
+        </div>
+        <div class="tip-box mt-16">Forces shown only when PCD is entered. Tangential force = driving force at pitch circle.
+        Radial force acts along the line of centres. Normal force acts perpendicular to tooth face.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function toKw(val, unit) {
+  if (unit === 'hp') return val * 0.7457;
+  return val;
+}
+function toNm(val, unit) {
+  if (unit === 'kgfm') return val * 9.80665;
+  if (unit === 'lbft') return val * 1.35582;
+  return val;
+}
+function clearAll() {
+  ['inp-kw','inp-torque','inp-rpm','inp-pcd'].forEach(id => document.getElementById(id).value = '');
+  ['res-kw','res-hp','res-nm','res-rpm','res-kgfm','res-lbft','res-lbin','res-omega','res-ft','res-fr','res-fn','res-pcd-used']
+    .forEach(id => { document.getElementById(id).textContent = '—'; });
+}
+function calculate() {
+  const pwrRaw = parseFloat(document.getElementById('inp-kw').value);
+  const tqRaw  = parseFloat(document.getElementById('inp-torque').value);
+  const rpmRaw = parseFloat(document.getElementById('inp-rpm').value);
+  const pcd    = parseFloat(document.getElementById('inp-pcd').value);
+  const alpha  = parseFloat(document.getElementById('inp-alpha').value);
+  const puUnit = document.getElementById('sel-power-unit').value;
+  const tuUnit = document.getElementById('sel-torque-unit').value;
+
+  let kw  = isNaN(pwrRaw) ? null : toKw(pwrRaw, puUnit);
+  let nm  = isNaN(tqRaw)  ? null : toNm(tqRaw, tuUnit);
+  let rpm = isNaN(rpmRaw) ? null : rpmRaw;
+
+  const knownCount = [kw, nm, rpm].filter(v => v !== null && v > 0).length;
+
+  if (knownCount >= 2) {
+    if (kw === null || kw === 0) kw  = nm && rpm ? nm * rpm / 9549.3 : null;
+    if (nm === null || nm === 0) nm  = kw && rpm ? kw * 9549.3 / rpm : null;
+    if (rpm === null || rpm === 0) rpm = kw && nm ? kw * 9549.3 / nm : null;
+  }
+
+  setResult('res-kw',  kw,  2);
+  setResult('res-hp',  kw ? kw / 0.7457 : null, 2);
+  setResult('res-nm',  nm,  1);
+  setResult('res-rpm', rpm, 1);
+  setResult('res-kgfm', nm ? nm / 9.80665 : null, 3);
+  setResult('res-lbft', nm ? nm / 1.35582 : null, 2);
+  setResult('res-lbin', nm ? nm / 0.11299 : null, 1);
+  setResult('res-omega', rpm ? rpm * 2 * Math.PI / 60 : null, 3);
+
+  if (!isNaN(pcd) && pcd > 0 && nm > 0) {
+    const aRad = toRad(alpha);
+    const ft = 2 * nm * 1000 / pcd;
+    const fr = ft * Math.tan(aRad);
+    const fn = ft / Math.cos(aRad);
+    setResult('res-ft', ft, 1);
+    setResult('res-fr', fr, 1);
+    setResult('res-fn', fn, 1);
+    document.getElementById('res-pcd-used').textContent = pcd;
+  } else {
+    ['res-ft','res-fr','res-fn','res-pcd-used'].forEach(id => document.getElementById(id).textContent = '—');
+  }
+}
+</script>
+</body></html>

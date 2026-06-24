@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Unit Converter — GearLab</title>
+<link rel="icon" href="favicon.svg"/>
+<link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+<script src="js/common.js"></script>
+<script>buildNav('unit-conv');</script>
+<div class="main-content">
+  <div class="page-header"><div>
+    <div class="page-title">Engineering Unit Converter</div>
+    <div class="page-sub">Type in any field — all units update instantly</div>
+  </div></div>
+
+  <div class="grid-2">
+    <!-- Power -->
+    <div class="card card-body">
+      <div class="converter-section">
+        <h3>&#9889; Power</h3>
+        <div class="converter-row"><input type="number" id="p-kw"  placeholder="kW"  oninput="convPow('kw')"/> <div class="converter-eq">=</div> <div class="field-unit" style="flex:1;justify-content:center">kilowatts</div></div>
+        <div class="converter-row"><input type="number" id="p-hp"  placeholder="HP"  oninput="convPow('hp')"/> <div class="converter-eq">=</div> <div class="field-unit" style="flex:1;justify-content:center">horsepower (metric)</div></div>
+        <div class="converter-row"><input type="number" id="p-hpi" placeholder="HP"  oninput="convPow('hpi')"/><div class="converter-eq">=</div> <div class="field-unit" style="flex:1;justify-content:center">horsepower (imperial)</div></div>
+        <div class="converter-row"><input type="number" id="p-w"   placeholder="W"   oninput="convPow('w')"/> <div class="converter-eq">=</div> <div class="field-unit" style="flex:1;justify-content:center">watts</div></div>
+      </div>
+    </div>
+
+    <!-- Torque -->
+    <div class="card card-body">
+      <div class="converter-section">
+        <h3>&#128260; Torque</h3>
+        <div class="converter-row"><input type="number" id="t-nm"   placeholder="N·m"    oninput="convTorque('nm')"/>  <div class="converter-eq">=</div> <div class="field-unit" style="flex:1;justify-content:center">Newton-metres</div></div>
+        <div class="converter-row"><input type="number" id="t-kgfm" placeholder="kgf·m"  oninput="convTorque('kgfm')"/><div class="converter-eq">=</div> <div class="field-unit" style="flex:1;justify-content:center">kilogram-force metre</div></div>
+        <div class="converter-row"><input type="number" id="t-lbft" placeholder="lb·ft"  oninput="convTorque('lbft')"/><div class="converter-eq">=</div> <div class="field-unit" style="flex:1;justify-content:center">pound-force foot</div></div>
+        <div class="converter-row"><input type="number" id="t-lbin" placeholder="lb·in"  oninput="convTorque('lbin')"/><div class="converter-eq">=</div> <div class="field-unit" style="flex:1;justify-content:center">pound-force inch</div></div>
+        <div class="converter-row"><input type="number" id="t-nm2"  placeholder="N·cm"   oninput="convTorque('nm2')"/> <div class="converter-eq">=</div> <div class="field-unit" style="flex:1;justify-content:center">Newton-centimetre</div></div>
+      </div>
+    </div>
+
+    <!-- Speed -->
+    <div class="card card-body">
+      <div class="converter-section">
+        <h3>&#8635; Rotational Speed</h3>
+        <div class="converter-row"><input type="number" id="n-rpm"  placeholder="RPM"    oninput="convSpeed('rpm')"/> <div class="converter-eq">=</div> <div class="field-unit" style="flex:1;justify-content:center">rev / minute</div></div>
+        <div class="converter-row"><input type="number" id="n-rps"  placeholder="RPS"    oninput="convSpeed('rps')"/> <div class="converter-eq">=</div> <div class="field-unit" style="flex:1;justify-content:center">rev / second</div></div>
+        <div class="converter-row"><input type="number" id="n-rads" placeholder="rad/s"  oninput="convSpeed('rads')"/><div class="converter-eq">=</div> <div class="field-unit" style="flex:1;justify-content:center">radian / second</div></div>
+        <div class="converter-row"><input type="number" id="n-degs" placeholder="deg/s"  oninput="convSpeed('degs')"/><div class="converter-eq">=</div> <div class="field-unit" style="flex:1;justify-content:center">degree / second</div></div>
+      </div>
+    </div>
+
+    <!-- Length -->
+    <div class="card card-body">
+      <div class="converter-section">
+        <h3>&#8596; Length / Dimension</h3>
+        <div class="converter-row"><input type="number" id="l-mm"   placeholder="mm"     oninput="convLen('mm')"/>  <div class="converter-eq">=</div> <div class="field-unit" style="flex:1;justify-content:center">millimetre</div></div>
+        <div class="converter-row"><input type="number" id="l-cm"   placeholder="cm"     oninput="convLen('cm')"/>  <div class="converter-eq">=</div> <div class="field-unit" style="flex:1;justify-content:center">centimetre</div></div>
+        <div class="converter-row"><input type="number" id="l-m"    placeholder="m"      oninput="convLen('m')"/>   <div class="converter-eq">=</div> <div class="field-unit" style="flex:1;justify-content:center">metre</div></div>
+        <div class="converter-row"><input type="number" id="l-inch" placeholder="inch"   oninput="convLen('inch')"/><div class="converter-eq">=</div> <div class="field-unit" style="flex:1;justify-content:center">inch</div></div>
+        <div class="converter-row"><input type="number" id="l-ft"   placeholder="ft"     oninput="convLen('ft')"/>  <div class="converter-eq">=</div> <div class="field-unit" style="flex:1;justify-content:center">foot</div></div>
+      </div>
+    </div>
+
+    <!-- Force -->
+    <div class="card card-body">
+      <div class="converter-section">
+        <h3>&#9654; Force</h3>
+        <div class="converter-row"><input type="number" id="f-n"   placeholder="N"    oninput="convForce('n')"/>  <div class="converter-eq">=</div> <div class="field-unit" style="flex:1;justify-content:center">Newton</div></div>
+        <div class="converter-row"><input type="number" id="f-kn"  placeholder="kN"   oninput="convForce('kn')"/> <div class="converter-eq">=</div> <div class="field-unit" style="flex:1;justify-content:center">kilonewton</div></div>
+        <div class="converter-row"><input type="number" id="f-kgf" placeholder="kgf"  oninput="convForce('kgf')"/><div class="converter-eq">=</div> <div class="field-unit" style="flex:1;justify-content:center">kilogram-force</div></div>
+        <div class="converter-row"><input type="number" id="f-lbf" placeholder="lbf"  oninput="convForce('lbf')"/><div class="converter-eq">=</div> <div class="field-unit" style="flex:1;justify-content:center">pound-force</div></div>
+        <div class="converter-row"><input type="number" id="f-tf"  placeholder="tf"   oninput="convForce('tf')"/> <div class="converter-eq">=</div> <div class="field-unit" style="flex:1;justify-content:center">tonne-force</div></div>
+      </div>
+    </div>
+
+    <!-- Pressure / Stress -->
+    <div class="card card-body">
+      <div class="converter-section">
+        <h3>&#128200; Pressure / Stress</h3>
+        <div class="converter-row"><input type="number" id="s-mpa"  placeholder="MPa"  oninput="convStress('mpa')"/> <div class="converter-eq">=</div> <div class="field-unit" style="flex:1;justify-content:center">megapascal (N/mm²)</div></div>
+        <div class="converter-row"><input type="number" id="s-gpa"  placeholder="GPa"  oninput="convStress('gpa')"/> <div class="converter-eq">=</div> <div class="field-unit" style="flex:1;justify-content:center">gigapascal</div></div>
+        <div class="converter-row"><input type="number" id="s-bar"  placeholder="bar"  oninput="convStress('bar')"/> <div class="converter-eq">=</div> <div class="field-unit" style="flex:1;justify-content:center">bar</div></div>
+        <div class="converter-row"><input type="number" id="s-psi"  placeholder="psi"  oninput="convStress('psi')"/> <div class="converter-eq">=</div> <div class="field-unit" style="flex:1;justify-content:center">pounds per sq. inch</div></div>
+        <div class="converter-row"><input type="number" id="s-ksi"  placeholder="ksi"  oninput="convStress('ksi')"/> <div class="converter-eq">=</div> <div class="field-unit" style="flex:1;justify-content:center">kilo-psi</div></div>
+        <div class="converter-row"><input type="number" id="s-kgcm" placeholder="kgf/cm²" oninput="convStress('kgcm')"/><div class="converter-eq">=</div><div class="field-unit" style="flex:1;justify-content:center">kgf / cm²</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.converter-row input { flex:1; }
+.converter-row { display:flex; gap:10px; align-items:center; margin-bottom:8px; }
+</style>
+
+<script>
+const r6 = v => isNaN(v)||!isFinite(v) ? '' : +v.toPrecision(6);
+function setFields(map) { Object.entries(map).forEach(([id, val]) => { const el=document.getElementById(id); if(el && el !== document.activeElement) el.value=r6(val)||''; }); }
+
+// Power — base: kW
+function convPow(from) {
+  const v = +document.getElementById('p-'+from).value;
+  let kw;
+  if(from==='kw')  kw=v;
+  if(from==='hp')  kw=v*0.73550;
+  if(from==='hpi') kw=v*0.74570;
+  if(from==='w')   kw=v/1000;
+  setFields({'p-kw':kw,'p-hp':kw/0.73550,'p-hpi':kw/0.74570,'p-w':kw*1000});
+}
+
+// Torque — base: N·m
+function convTorque(from) {
+  const v = +document.getElementById('t-'+from).value;
+  let nm;
+  if(from==='nm')   nm=v;
+  if(from==='kgfm') nm=v*9.80665;
+  if(from==='lbft') nm=v*1.35582;
+  if(from==='lbin') nm=v*0.112985;
+  if(from==='nm2')  nm=v*0.01;
+  setFields({'t-nm':nm,'t-kgfm':nm/9.80665,'t-lbft':nm/1.35582,'t-lbin':nm/0.112985,'t-nm2':nm*100});
+}
+
+// Speed — base: RPM
+function convSpeed(from) {
+  const v = +document.getElementById('n-'+from).value;
+  let rpm;
+  if(from==='rpm')  rpm=v;
+  if(from==='rps')  rpm=v*60;
+  if(from==='rads') rpm=v*60/(2*Math.PI);
+  if(from==='degs') rpm=v/6;
+  setFields({'n-rpm':rpm,'n-rps':rpm/60,'n-rads':rpm*2*Math.PI/60,'n-degs':rpm*6});
+}
+
+// Length — base: mm
+function convLen(from) {
+  const v = +document.getElementById('l-'+from).value;
+  let mm;
+  if(from==='mm')   mm=v;
+  if(from==='cm')   mm=v*10;
+  if(from==='m')    mm=v*1000;
+  if(from==='inch') mm=v*25.4;
+  if(from==='ft')   mm=v*304.8;
+  setFields({'l-mm':mm,'l-cm':mm/10,'l-m':mm/1000,'l-inch':mm/25.4,'l-ft':mm/304.8});
+}
+
+// Force — base: N
+function convForce(from) {
+  const v = +document.getElementById('f-'+from).value;
+  let n;
+  if(from==='n')   n=v;
+  if(from==='kn')  n=v*1000;
+  if(from==='kgf') n=v*9.80665;
+  if(from==='lbf') n=v*4.44822;
+  if(from==='tf')  n=v*9806.65;
+  setFields({'f-n':n,'f-kn':n/1000,'f-kgf':n/9.80665,'f-lbf':n/4.44822,'f-tf':n/9806.65});
+}
+
+// Stress — base: MPa
+function convStress(from) {
+  const v = +document.getElementById('s-'+from).value;
+  let mpa;
+  if(from==='mpa')  mpa=v;
+  if(from==='gpa')  mpa=v*1000;
+  if(from==='bar')  mpa=v*0.1;
+  if(from==='psi')  mpa=v*0.00689476;
+  if(from==='ksi')  mpa=v*6.89476;
+  if(from==='kgcm') mpa=v*0.0980665;
+  setFields({'s-mpa':mpa,'s-gpa':mpa/1000,'s-bar':mpa/0.1,'s-psi':mpa/0.00689476,'s-ksi':mpa/6.89476,'s-kgcm':mpa/0.0980665});
+}
+</script>
+</body></html>

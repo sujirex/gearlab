@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Helical Gear Calculator — GearLab</title>
+<link rel="icon" href="favicon.svg"/>
+<link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+<script src="js/common.js"></script>
+<script>buildNav('helical-gear');</script>
+<div class="main-content">
+  <div class="page-header"><div>
+    <div class="page-title">Helical Gear Geometry Calculator</div>
+    <div class="page-sub">Normal module, helix angle &amp; teeth count &rarr; full helical geometry — ISO 54 standard</div>
+  </div></div>
+
+  <div class="calc-grid">
+    <!-- INPUT PANEL -->
+    <div>
+      <div class="card card-body input-panel">
+        <div class="field-group">
+          <div class="field-label">Normal Module (m&#x2099;) <span>— ISO standard</span></div>
+          <select id="inp-mn">
+            <option value="1">mn = 1</option>
+            <option value="1.25">mn = 1.25</option>
+            <option value="1.5">mn = 1.5</option>
+            <option value="2" selected>mn = 2</option>
+            <option value="2.5">mn = 2.5</option>
+            <option value="3">mn = 3</option>
+            <option value="4">mn = 4</option>
+            <option value="5">mn = 5</option>
+            <option value="6">mn = 6</option>
+            <option value="8">mn = 8</option>
+            <option value="10">mn = 10</option>
+            <option value="12">mn = 12</option>
+            <option value="16">mn = 16</option>
+            <option value="20">mn = 20</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <div class="field-label">Helix Angle (&beta;)</div>
+          <div class="field-row">
+            <input type="number" id="inp-beta" value="15" min="5" max="45" step="0.5"/>
+            <div class="field-unit">deg</div>
+          </div>
+        </div>
+        <div class="field-group">
+          <div class="field-label">Normal Pressure Angle (&alpha;&#x2099;)</div>
+          <select id="inp-alpha">
+            <option value="20" selected>20° (standard)</option>
+            <option value="14.5">14.5° (old standard)</option>
+            <option value="25">25° (heavy load)</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <div class="field-label">Pinion Teeth (z&#8321;)</div>
+          <div class="field-row">
+            <input type="number" id="inp-z1" value="20" min="6" max="500" step="1"/>
+            <div class="field-unit">teeth</div>
+          </div>
+        </div>
+        <div class="field-group">
+          <div class="field-label">Gear Teeth (z&#8322;)</div>
+          <div class="field-row">
+            <input type="number" id="inp-z2" value="40" min="6" max="500" step="1"/>
+            <div class="field-unit">teeth</div>
+          </div>
+        </div>
+        <div class="field-group">
+          <div class="field-label">Face Width (b)</div>
+          <div class="field-row">
+            <input type="number" id="inp-b" value="50" min="1" max="2000" step="1"/>
+            <div class="field-unit">mm</div>
+          </div>
+        </div>
+        <div class="field-group">
+          <div class="field-label">Input Speed (n&#8321;)</div>
+          <div class="field-row">
+            <input type="number" id="inp-rpm" value="1450" min="1" max="50000" step="1"/>
+            <div class="field-unit">RPM</div>
+          </div>
+        </div>
+        <button class="btn-calc" id="btn-calc">Calculate</button>
+      </div>
+
+      <!-- Helix angle guide -->
+      <div class="card card-body mt-16">
+        <div class="formula-block">
+          <div class="formula-title">Typical Helix Angles</div>
+          <table class="formula-table">
+            <thead><tr><th>Application</th><th>&beta;</th></tr></thead>
+            <tbody>
+              <tr><td>Automotive</td><td>15°–30°</td></tr>
+              <tr><td>Industrial gearboxes</td><td>10°–25°</td></tr>
+              <tr><td>High-speed</td><td>25°–45°</td></tr>
+              <tr><td>Low noise</td><td>20°–35°</td></tr>
+            </tbody>
+          </table>
+          <div style="margin-top:10px;font-size:11px;color:var(--text-muted)">Higher &beta; = smoother operation, more axial thrust. Keep &beta; &lt; 45° to limit axial load.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULTS PANEL -->
+    <div>
+      <!-- Gear parameters -->
+      <div class="card card-body">
+        <div class="result-section-title">Transverse Plane Parameters</div>
+        <div class="result-grid">
+          <div class="result-item">
+            <div class="result-label">Transverse Module (m&#x209C;)</div>
+            <div><span class="result-value" id="r-mt">—</span><span class="result-unit">mm</span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Transverse Pressure Angle (&alpha;&#x209C;)</div>
+            <div><span class="result-value" id="r-alphat">—</span><span class="result-unit">deg</span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Transverse Circular Pitch (p&#x209C;)</div>
+            <div><span class="result-value" id="r-pt">—</span><span class="result-unit">mm</span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Normal Circular Pitch (p&#x2099;)</div>
+            <div><span class="result-value" id="r-pn">—</span><span class="result-unit">mm</span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Axial Pitch (p&#x2093;)</div>
+            <div><span class="result-value" id="r-px">—</span><span class="result-unit">mm</span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Center Distance (a)</div>
+            <div><span class="result-value" id="r-a">—</span><span class="result-unit">mm</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pinion dimensions -->
+      <div class="card card-body mt-16">
+        <div class="result-section-title">Pinion Dimensions (Gear 1)</div>
+        <div class="result-grid">
+          <div class="result-item">
+            <div class="result-label">Pitch Circle Diameter (d&#8321;)</div>
+            <div><span class="result-value" id="r-d1">—</span><span class="result-unit">mm</span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Tip Diameter (d&#x2090;&#8321;)</div>
+            <div><span class="result-value" id="r-da1">—</span><span class="result-unit">mm</span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Root Diameter (d&#x2091;&#8321;)</div>
+            <div><span class="result-value" id="r-df1">—</span><span class="result-unit">mm</span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Base Circle (d&#x2062;&#8321;)</div>
+            <div><span class="result-value" id="r-db1">—</span><span class="result-unit">mm</span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Lead (L&#8321;)</div>
+            <div><span class="result-value" id="r-L1">—</span><span class="result-unit">mm</span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Virtual Teeth (z&#x1D65;&#8321;)</div>
+            <div><span class="result-value" id="r-zv1">—</span><span class="result-unit">teeth</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gear dimensions -->
+      <div class="card card-body mt-16">
+        <div class="result-section-title">Gear Dimensions (Gear 2)</div>
+        <div class="result-grid">
+          <div class="result-item">
+            <div class="result-label">Pitch Circle Diameter (d&#8322;)</div>
+            <div><span class="result-value" id="r-d2">—</span><span class="result-unit">mm</span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Tip Diameter (d&#x2090;&#8322;)</div>
+            <div><span class="result-value" id="r-da2">—</span><span class="result-unit">mm</span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Root Diameter (d&#x2091;&#8322;)</div>
+            <div><span class="result-value" id="r-df2">—</span><span class="result-unit">mm</span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Base Circle (d&#x2062;&#8322;)</div>
+            <div><span class="result-value" id="r-db2">—</span><span class="result-unit">mm</span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Lead (L&#8322;)</div>
+            <div><span class="result-value" id="r-L2">—</span><span class="result-unit">mm</span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Virtual Teeth (z&#x1D65;&#8322;)</div>
+            <div><span class="result-value" id="r-zv2">—</span><span class="result-unit">teeth</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact ratios & speed -->
+      <div class="card card-body mt-16">
+        <div class="result-section-title">Contact Ratios &amp; Speed</div>
+        <div class="result-grid">
+          <div class="result-item">
+            <div class="result-label">Gear Ratio (i)</div>
+            <div><span class="result-value" id="r-i">—</span><span class="result-unit"></span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Output Speed (n&#8322;)</div>
+            <div><span class="result-value" id="r-n2">—</span><span class="result-unit">RPM</span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Transverse Contact Ratio (&epsilon;&#x3B1;)</div>
+            <div><span class="result-value" id="r-ea">—</span><span class="result-unit"></span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Axial (Overlap) Ratio (&epsilon;&#x3B2;)</div>
+            <div><span class="result-value" id="r-eb">—</span><span class="result-unit"></span></div>
+          </div>
+          <div class="result-item highlight">
+            <div class="result-label">Total Contact Ratio (&epsilon;&#x3B3;)</div>
+            <div><span class="result-value" id="r-eg">—</span><span class="result-unit"></span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Pitch Line Velocity</div>
+            <div><span class="result-value" id="r-v">—</span><span class="result-unit">m/s</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Formulas -->
+      <div class="card card-body mt-16">
+        <div class="formula-block">
+          <div class="formula-title">Key Formulas</div>
+          <div class="formula-row"><span class="formula-label">Transverse module</span><span class="formula-expr">m&#x209C; = m&#x2099; / cos(&beta;)</span></div>
+          <div class="formula-row"><span class="formula-label">Transv. pressure angle</span><span class="formula-expr">tan(&alpha;&#x209C;) = tan(&alpha;&#x2099;) / cos(&beta;)</span></div>
+          <div class="formula-row"><span class="formula-label">Pitch circle dia.</span><span class="formula-expr">d = m&#x209C; &times; z</span></div>
+          <div class="formula-row"><span class="formula-label">Tip diameter</span><span class="formula-expr">d&#x2090; = d + 2m&#x2099;</span></div>
+          <div class="formula-row"><span class="formula-label">Root diameter</span><span class="formula-expr">d&#x2091; = d &minus; 2.5m&#x2099;</span></div>
+          <div class="formula-row"><span class="formula-label">Lead</span><span class="formula-expr">L = &pi; &times; d / tan(&beta;)</span></div>
+          <div class="formula-row"><span class="formula-label">Axial pitch</span><span class="formula-expr">p&#x2093; = &pi; &times; m&#x209C; / tan(&beta;)</span></div>
+          <div class="formula-row"><span class="formula-label">Virtual teeth</span><span class="formula-expr">z&#x1D65; = z / cos&sup3;(&beta;)</span></div>
+          <div class="formula-row"><span class="formula-label">Overlap ratio</span><span class="formula-expr">&epsilon;&#x3B2; = b &times; sin(&beta;) / (&pi; &times; m&#x2099;)</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const toR = d => d * Math.PI / 180;
+const r3 = v => Math.round(v * 1000) / 1000;
+const r2 = v => Math.round(v * 100) / 100;
+
+function calc() {
+  const mn    = parseFloat(document.getElementById('inp-mn').value);
+  const beta  = parseFloat(document.getElementById('inp-beta').value);
+  const alphaN = parseFloat(document.getElementById('inp-alpha').value);
+  const z1    = parseInt(document.getElementById('inp-z1').value);
+  const z2    = parseInt(document.getElementById('inp-z2').value);
+  const b     = parseFloat(document.getElementById('inp-b').value);
+  const n1    = parseFloat(document.getElementById('inp-rpm').value);
+
+  const betaR  = toR(beta);
+  const alphaNR = toR(alphaN);
+
+  // Transverse values
+  const mt     = mn / Math.cos(betaR);
+  const alphaTR = Math.atan(Math.tan(alphaNR) / Math.cos(betaR));
+  const alphaT  = alphaTR * 180 / Math.PI;
+  const pt     = Math.PI * mt;
+  const pn     = Math.PI * mn;
+  const px     = Math.PI * mt / Math.tan(betaR);
+
+  // Pinion
+  const d1  = mt * z1;
+  const da1 = d1 + 2 * mn;
+  const df1 = d1 - 2.5 * mn;
+  const db1 = d1 * Math.cos(alphaTR);
+  const L1  = Math.PI * d1 / Math.tan(betaR);
+  const zv1 = z1 / Math.pow(Math.cos(betaR), 3);
+
+  // Gear
+  const d2  = mt * z2;
+  const da2 = d2 + 2 * mn;
+  const df2 = d2 - 2.5 * mn;
+  const db2 = d2 * Math.cos(alphaTR);
+  const L2  = Math.PI * d2 / Math.tan(betaR);
+  const zv2 = z2 / Math.pow(Math.cos(betaR), 3);
+
+  // Center distance
+  const a = (d1 + d2) / 2;
+
+  // Contact ratios
+  const ea = (Math.sqrt(da1*da1 - db1*db1) + Math.sqrt(da2*da2 - db2*db2) - 2*a*Math.sin(alphaTR)) / (2 * Math.PI * mt * Math.cos(alphaTR));
+  const eb = b * Math.sin(betaR) / (Math.PI * mn);
+  const eg = ea + eb;
+
+  // Speed
+  const i  = z2 / z1;
+  const n2 = n1 / i;
+  const v  = Math.PI * d1 * n1 / 60000; // m/s
+
+  function set(id, val, d = 3) {
+    document.getElementById(id).textContent = (val === null || isNaN(val) || !isFinite(val)) ? '—' : r3(val);
+  }
+
+  set('r-mt',     mt,     3);
+  set('r-alphat', alphaT, 3);
+  set('r-pt',     pt,     3);
+  set('r-pn',     pn,     3);
+  set('r-px',     px,     3);
+  set('r-a',      a,      3);
+
+  set('r-d1',  d1,  3); set('r-da1', da1, 3); set('r-df1', df1, 3);
+  set('r-db1', db1, 3); set('r-L1',  L1,  3); set('r-zv1', zv1, 2);
+
+  set('r-d2',  d2,  3); set('r-da2', da2, 3); set('r-df2', df2, 3);
+  set('r-db2', db2, 3); set('r-L2',  L2,  3); set('r-zv2', zv2, 2);
+
+  set('r-i',  i,  4); set('r-n2', n2, 1);
+  set('r-ea', ea, 3); set('r-eb', eb, 3); set('r-eg', eg, 3);
+  set('r-v',  v,  3);
+
+  toast('Calculated successfully');
+}
+
+document.getElementById('btn-calc').addEventListener('click', calc);
+['inp-mn','inp-beta','inp-alpha','inp-z1','inp-z2','inp-b','inp-rpm'].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) el.addEventListener('input', calc);
+});
+
+// Auto-calculate on load
+calc();
+</script>
+</body>
+</html>

@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Service Factor — GearLab</title>
+<link rel="icon" href="favicon.svg"/>
+<link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+<script src="js/common.js"></script>
+<script>buildNav('service');</script>
+<div class="main-content">
+  <div class="page-header"><div>
+    <div class="page-title">Service Factor &amp; Gearbox Selection</div>
+    <div class="page-sub">AGMA application factor, shock classification &amp; required gearbox rating — AGMA 9002-B04</div>
+  </div></div>
+
+  <div class="calc-grid">
+    <!-- INPUT PANEL -->
+    <div>
+      <div class="card card-body input-panel">
+        <div class="field-group">
+          <div class="field-label">Required Power (P)</div>
+          <div class="field-row">
+            <input type="number" id="inp-power" value="22" min="0.1" max="10000" step="0.1"/>
+            <div class="field-unit">kW</div>
+          </div>
+        </div>
+        <div class="field-group">
+          <div class="field-label">Operating Speed</div>
+          <div class="field-row">
+            <input type="number" id="inp-rpm" value="1450" min="1" max="30000" step="1"/>
+            <div class="field-unit">RPM</div>
+          </div>
+        </div>
+        <div class="field-group">
+          <div class="field-label">Daily Operating Hours</div>
+          <select id="inp-hours">
+            <option value="0.5">Up to 0.5 h/day</option>
+            <option value="3">0.5 – 3 h/day</option>
+            <option value="10" selected>3 – 10 h/day (1 shift)</option>
+            <option value="24">10 – 24 h/day (continuous)</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <div class="field-label">Prime Mover</div>
+          <select id="inp-prime">
+            <option value="0">Electric motor — uniform</option>
+            <option value="1">Electric motor — with soft starter</option>
+            <option value="2">Hydraulic motor</option>
+            <option value="3">Steam / gas turbine</option>
+            <option value="4">IC engine — multi-cylinder</option>
+            <option value="5">IC engine — single cylinder</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <div class="field-label">Driven Machine</div>
+          <select id="inp-driven">
+            <optgroup label="Uniform (Ko = 1.0 base)">
+              <option value="uniform_u">Centrifugal pump / fan</option>
+              <option value="uniform_u2">Conveyor (belt, smooth load)</option>
+              <option value="uniform_u3">Generator / alternator</option>
+            </optgroup>
+            <optgroup label="Moderate Shock (Ko = 1.25 base)">
+              <option value="mod_m1">Conveyor (screw / drag chain)</option>
+              <option value="mod_m2">Compressor — centrifugal</option>
+              <option value="mod_m3">Agitator / mixer (uniform density)</option>
+              <option value="mod_m4">Machine tool (main drive)</option>
+            </optgroup>
+            <optgroup label="Heavy Shock (Ko = 1.75 base)">
+              <option value="hvy_h1">Compressor — reciprocating</option>
+              <option value="hvy_h2">Crane / hoist</option>
+              <option value="hvy_h3">Extruder (plastic / rubber)</option>
+              <option value="hvy_h4">Ball mill / rod mill</option>
+              <option value="hvy_h5">Crusher / shredder</option>
+              <option value="hvy_h6">Pump — reciprocating</option>
+            </optgroup>
+          </select>
+        </div>
+        <div class="field-group">
+          <div class="field-label">Start Frequency</div>
+          <select id="inp-starts">
+            <option value="1.0">Rare (&lt; 2/day)</option>
+            <option value="1.05" selected>Normal (2–5/day)</option>
+            <option value="1.1">Frequent (5–10/day)</option>
+            <option value="1.15">Very frequent (&gt;10/day)</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <div class="field-label">Environment</div>
+          <select id="inp-env">
+            <option value="1.0" selected>Clean, indoor (standard)</option>
+            <option value="1.05">Dusty / humid</option>
+            <option value="1.1">Corrosive / outdoor</option>
+            <option value="1.15">Severe (mining / offshore)</option>
+          </select>
+        </div>
+        <button class="btn-calc" id="btn-calc">Calculate Service Factor</button>
+      </div>
+
+      <!-- AGMA Ko table -->
+      <div class="card card-body mt-16">
+        <div class="formula-block">
+          <div class="formula-title">AGMA Overload Factor K&#x2080; Reference</div>
+          <table class="formula-table">
+            <thead>
+              <tr>
+                <th>Prime Mover</th>
+                <th>Uniform</th>
+                <th>Mod. Shock</th>
+                <th>Heavy Shock</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Electric (uniform)</td><td>1.00</td><td>1.25</td><td>1.75</td></tr>
+              <tr><td>Hydraulic / turbine</td><td>1.10</td><td>1.35</td><td>1.85</td></tr>
+              <tr><td>IC multi-cylinder</td><td>1.25</td><td>1.50</td><td>2.00</td></tr>
+              <tr><td>IC single-cylinder</td><td>1.50</td><td>1.75</td><td>2.25</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULTS PANEL -->
+    <div>
+      <!-- Factors breakdown -->
+      <div class="card card-body">
+        <div class="result-section-title">Factor Breakdown</div>
+        <div class="result-grid">
+          <div class="result-item">
+            <div class="result-label">Overload Factor (K&#x2080;)</div>
+            <div><span class="result-value" id="r-Ko">—</span><span class="result-unit"></span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Hours Factor (K&#x210B;)</div>
+            <div><span class="result-value" id="r-Kh">—</span><span class="result-unit"></span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Start Factor (K&#x2099;)</div>
+            <div><span class="result-value" id="r-Kn">—</span><span class="result-unit"></span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Environment Factor (K&#x2091;)</div>
+            <div><span class="result-value" id="r-Ke">—</span><span class="result-unit"></span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Service factor result -->
+      <div class="card card-body mt-16">
+        <div class="result-section-title">Service Factor &amp; Required Rating</div>
+        <div class="result-grid">
+          <div class="result-item highlight">
+            <div class="result-label">Total Service Factor (f&#x2099;)</div>
+            <div><span class="result-value" id="r-SF" style="font-size:28px">—</span><span class="result-unit"></span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Nominal Power (P)</div>
+            <div><span class="result-value" id="r-P">—</span><span class="result-unit">kW</span></div>
+          </div>
+          <div class="result-item highlight">
+            <div class="result-label">Required Gearbox Rating</div>
+            <div><span class="result-value" id="r-Preq" style="font-size:24px">—</span><span class="result-unit">kW</span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Required Torque Rating</div>
+            <div><span class="result-value" id="r-Treq">—</span><span class="result-unit">N·m</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recommended gearbox class -->
+      <div id="rec-card" class="card card-body mt-16" style="display:none">
+        <div class="result-section-title">Recommended Gearbox Class</div>
+        <div id="rec-content"></div>
+      </div>
+
+      <!-- Standard service factors table -->
+      <div class="card card-body mt-16">
+        <div class="formula-block">
+          <div class="formula-title">Typical Service Factors by Application</div>
+          <table class="formula-table">
+            <thead><tr><th>Application</th><th>f&#x2099; range</th><th>Hours/day</th></tr></thead>
+            <tbody>
+              <tr><td>Centrifugal pump</td><td>1.0 – 1.25</td><td>8 – 24</td></tr>
+              <tr><td>Belt conveyor</td><td>1.25 – 1.5</td><td>8 – 24</td></tr>
+              <tr><td>Screw conveyor</td><td>1.5 – 2.0</td><td>8 – 16</td></tr>
+              <tr><td>Reciprocating compressor</td><td>1.75 – 2.0</td><td>8 – 24</td></tr>
+              <tr><td>Crane / hoist</td><td>1.5 – 2.0</td><td>4 – 12</td></tr>
+              <tr><td>Ball / rod mill</td><td>2.0 – 2.5</td><td>16 – 24</td></tr>
+              <tr><td>Crusher</td><td>2.0 – 2.5</td><td>8 – 24</td></tr>
+              <tr><td>Agitator</td><td>1.25 – 1.75</td><td>8 – 24</td></tr>
+              <tr><td>Paper machinery</td><td>1.5 – 2.0</td><td>16 – 24</td></tr>
+              <tr><td>Machine tool</td><td>1.25 – 1.5</td><td>8 – 16</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Formulas -->
+      <div class="card card-body mt-16">
+        <div class="formula-block">
+          <div class="formula-title">Service Factor Formula</div>
+          <div class="formula-row"><span class="formula-label">Service factor</span><span class="formula-expr">f&#x2099; = K&#x2080; &times; K&#x210B; &times; K&#x2099; &times; K&#x2091;</span></div>
+          <div class="formula-row"><span class="formula-label">Required rating</span><span class="formula-expr">P&#x1D63;&#x2091;&#x2102; = P &times; f&#x2099;</span></div>
+          <div class="formula-row"><span class="formula-label">Required torque</span><span class="formula-expr">T = 9549.3 &times; P&#x1D63;&#x2091;&#x2102; / n</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Prime mover shock addition to Ko base
+const PRIME_ADD = {
+  0: 0.00,   // Electric uniform
+  1: 0.00,   // Electric soft start (treated same)
+  2: 0.10,   // Hydraulic
+  3: 0.10,   // Turbine
+  4: 0.25,   // IC multi
+  5: 0.50,   // IC single
+};
+
+// Driven machine base Ko by shock class
+const DRIVEN_KO = {
+  uniform_u:  1.00, uniform_u2: 1.00, uniform_u3: 1.00,
+  mod_m1: 1.25, mod_m2: 1.25, mod_m3: 1.25, mod_m4: 1.25,
+  hvy_h1: 1.75, hvy_h2: 1.75, hvy_h3: 1.75, hvy_h4: 1.75, hvy_h5: 1.75, hvy_h6: 1.75,
+};
+
+// Hours factor
+const HOURS_KH = { '0.5': 0.80, '3': 0.90, '10': 1.00, '24': 1.25 };
+
+// Gearbox classes
+function getGearboxClass(SF, Preq) {
+  if (SF < 1.0) return {cls:'ERROR', desc:'Service factor below 1.0 — gearbox will be undersized.', color:'#ef4444'};
+  if (SF < 1.25) return {cls:'Light Duty', desc:'Suitable for uniform load, short daily operation. Standard commercial gearbox.', color:'#38bdf8'};
+  if (SF < 1.5)  return {cls:'Medium Duty', desc:'Standard industrial gearbox. Adequate for most conveyor and pump applications.', color:'#22c55e'};
+  if (SF < 2.0)  return {cls:'Heavy Duty', desc:'Reinforced industrial gearbox required. Suitable for crane, compressor, extruder.', color:'#f59e0b'};
+  return {cls:'Extra Heavy Duty', desc:'Special-purpose or reinforced gearbox needed. Consult manufacturer for crusher, ball mill, etc.', color:'#f97316'};
+}
+
+function calc() {
+  const P      = parseFloat(document.getElementById('inp-power').value);
+  const rpm    = parseFloat(document.getElementById('inp-rpm').value);
+  const hours  = document.getElementById('inp-hours').value;
+  const prime  = document.getElementById('inp-prime').value;
+  const driven = document.getElementById('inp-driven').value;
+  const starts = parseFloat(document.getElementById('inp-starts').value);
+  const env    = parseFloat(document.getElementById('inp-env').value);
+
+  const Ko  = (DRIVEN_KO[driven] || 1.0) + (PRIME_ADD[prime] || 0);
+  const Kh  = HOURS_KH[hours] || 1.0;
+  const Kn  = starts;
+  const Ke  = env;
+  const SF  = Ko * Kh * Kn * Ke;
+  const Preq = P * SF;
+  const Treq = 9549.3 * Preq / rpm;
+
+  function set(id, val, d = 2) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.textContent = isNaN(val) || !isFinite(val) ? '—' : parseFloat(val.toFixed(d));
+  }
+
+  set('r-Ko', Ko, 2); set('r-Kh', Kh, 2); set('r-Kn', Kn, 2); set('r-Ke', Ke, 2);
+  set('r-SF', SF, 2); set('r-P', P, 2); set('r-Preq', Preq, 2); set('r-Treq', Treq, 1);
+
+  const {cls, desc, color} = getGearboxClass(SF, Preq);
+  const rec = document.getElementById('rec-card');
+  const recC = document.getElementById('rec-content');
+  rec.style.display = 'block';
+  recC.innerHTML = `
+    <div style="font-size:22px;font-weight:800;color:${color};margin-bottom:6px">${cls}</div>
+    <div style="font-size:13px;color:var(--text-muted)">${desc}</div>
+    <div style="margin-top:12px;padding:10px 14px;background:var(--neon-bg);border-radius:8px;border:1px solid rgba(0,191,255,.15);font-size:12px">
+      <strong>Specify gearbox rated at:</strong>
+      &nbsp;&nbsp;&bull;&nbsp; Power ≥ <strong>${Preq.toFixed(2)} kW</strong>
+      &nbsp;&nbsp;&bull;&nbsp; Torque ≥ <strong>${Treq.toFixed(0)} N·m</strong>
+      &nbsp;&nbsp;&bull;&nbsp; Speed: <strong>${rpm} RPM input</strong>
+      &nbsp;&nbsp;&bull;&nbsp; Service Factor: <strong>fn = ${SF.toFixed(2)}</strong>
+    </div>`;
+
+  toast('Service factor calculated');
+}
+
+document.getElementById('btn-calc').addEventListener('click', calc);
+['inp-power','inp-rpm','inp-starts','inp-env'].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) el.addEventListener('input', calc);
+});
+['inp-hours','inp-prime','inp-driven'].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) el.addEventListener('change', calc);
+});
+
+calc();
+</script>
+</body>
+</html>

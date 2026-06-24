@@ -16,11 +16,11 @@ initTheme();
 const NAV = [
   { key:'dashboard',    href:'index.html',         icon:'home',     label:'Dashboard' },
   { key:'spur-gear',    href:'spur-gear.html',      icon:'gear',     label:'Spur Gear' },
-  { key:'helical-gear', href:'helical-gear.html',   icon:'helical',  label:'Helical Gear',  soon:true },
+  { key:'helical-gear', href:'helical-gear.html',   icon:'helical',  label:'Helical Gear' },
   { key:'power-torque', href:'power-torque.html',   icon:'power',    label:'Power & Torque' },
   { key:'gear-ratio',   href:'gear-ratio.html',     icon:'ratio',    label:'Gear Ratio' },
-  { key:'stress',       href:'stress.html',         icon:'stress',   label:'Stress Analysis', soon:true },
-  { key:'service',      href:'service-factor.html', icon:'factor',   label:'Service Factor',  soon:true },
+  { key:'stress',       href:'stress.html',         icon:'stress',   label:'Stress Analysis' },
+  { key:'service',      href:'service-factor.html', icon:'factor',   label:'Service Factor' },
   { key:'unit-conv',    href:'unit-converter.html', icon:'convert',  label:'Unit Converter' },
   { key:'guide',        href:'guide.html',          icon:'guide',    label:'Guide' },
 ];

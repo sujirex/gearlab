@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Gear Stress Analysis — GearLab</title>
+<link rel="icon" href="favicon.svg"/>
+<link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+<script src="js/common.js"></script>
+<script>buildNav('stress');</script>
+<div class="main-content">
+  <div class="page-header"><div>
+    <div class="page-title">Gear Stress Analysis</div>
+    <div class="page-sub">Lewis bending stress &amp; Hertz contact stress with safety factor check — AGMA / ISO 6336</div>
+  </div></div>
+
+  <div class="calc-grid">
+    <!-- INPUT PANEL -->
+    <div>
+      <div class="card card-body input-panel">
+        <div class="field-group">
+          <div class="field-label">Module (m) <span>— ISO standard</span></div>
+          <select id="inp-module">
+            <option value="1">m = 1</option>
+            <option value="1.25">m = 1.25</option>
+            <option value="1.5">m = 1.5</option>
+            <option value="2" selected>m = 2</option>
+            <option value="2.5">m = 2.5</option>
+            <option value="3">m = 3</option>
+            <option value="4">m = 4</option>
+            <option value="5">m = 5</option>
+            <option value="6">m = 6</option>
+            <option value="8">m = 8</option>
+            <option value="10">m = 10</option>
+            <option value="12">m = 12</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <div class="field-label">Pinion Teeth (z&#8321;)</div>
+          <div class="field-row">
+            <input type="number" id="inp-z1" value="20" min="12" max="300" step="1"/>
+            <div class="field-unit">teeth</div>
+          </div>
+        </div>
+        <div class="field-group">
+          <div class="field-label">Gear Teeth (z&#8322;)</div>
+          <div class="field-row">
+            <input type="number" id="inp-z2" value="40" min="12" max="300" step="1"/>
+            <div class="field-unit">teeth</div>
+          </div>
+        </div>
+        <div class="field-group">
+          <div class="field-label">Face Width (b)</div>
+          <div class="field-row">
+            <input type="number" id="inp-b" value="50" min="5" max="2000" step="1"/>
+            <div class="field-unit">mm</div>
+          </div>
+        </div>
+        <div class="field-group">
+          <div class="field-label">Pressure Angle (&alpha;)</div>
+          <select id="inp-alpha">
+            <option value="20" selected>20° (standard)</option>
+            <option value="14.5">14.5°</option>
+            <option value="25">25°</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <div class="field-label">Transmitted Power (P)</div>
+          <div class="field-row">
+            <input type="number" id="inp-power" value="15" min="0.01" max="10000" step="0.1"/>
+            <div class="field-unit">kW</div>
+          </div>
+        </div>
+        <div class="field-group">
+          <div class="field-label">Pinion Speed (n&#8321;)</div>
+          <div class="field-row">
+            <input type="number" id="inp-rpm" value="1450" min="1" max="50000" step="1"/>
+            <div class="field-unit">RPM</div>
+          </div>
+        </div>
+        <div class="field-group">
+          <div class="field-label">Pinion Material</div>
+          <select id="inp-mat1">
+            <option value="ci">Cast Iron (FG 200)</option>
+            <option value="c40">C40 Steel — Normalized</option>
+            <option value="c40ht" selected>C40Cr — Heat Treated</option>
+            <option value="alloy">20MnCr5 — Case Hardened</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <div class="field-label">Gear Material</div>
+          <select id="inp-mat2">
+            <option value="ci">Cast Iron (FG 200)</option>
+            <option value="c40">C40 Steel — Normalized</option>
+            <option value="c40ht" selected>C40Cr — Heat Treated</option>
+            <option value="alloy">20MnCr5 — Case Hardened</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <div class="field-label">Dynamic Factor (K&#x1D65;)</div>
+          <div class="field-row">
+            <input type="number" id="inp-kv" value="1.15" min="1" max="2.5" step="0.05"/>
+            <div class="field-unit">—</div>
+          </div>
+        </div>
+        <div class="field-group">
+          <div class="field-label">Application Factor (K&#x2090;)</div>
+          <div class="field-row">
+            <input type="number" id="inp-ka" value="1.0" min="1" max="3" step="0.05"/>
+            <div class="field-unit">—</div>
+          </div>
+        </div>
+        <button class="btn-calc" id="btn-calc">Analyse Stress</button>
+      </div>
+    </div>
+
+    <!-- RESULTS PANEL -->
+    <div>
+      <!-- Forces -->
+      <div class="card card-body">
+        <div class="result-section-title">Gear Forces</div>
+        <div class="result-grid">
+          <div class="result-item">
+            <div class="result-label">Pinion Torque (T&#8321;)</div>
+            <div><span class="result-value" id="r-T1">—</span><span class="result-unit">N·m</span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Tangential Force (F&#x209C;)</div>
+            <div><span class="result-value" id="r-Ft">—</span><span class="result-unit">N</span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Radial Force (F&#x1D63;)</div>
+            <div><span class="result-value" id="r-Fr">—</span><span class="result-unit">N</span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Normal Force (F&#x2099;)</div>
+            <div><span class="result-value" id="r-Fn">—</span><span class="result-unit">N</span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Design Force (W&#x209C;)</div>
+            <div><span class="result-value" id="r-Wt">—</span><span class="result-unit">N</span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Pitch Line Velocity</div>
+            <div><span class="result-value" id="r-v">—</span><span class="result-unit">m/s</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lewis Bending Stress — Pinion -->
+      <div class="card card-body mt-16">
+        <div class="result-section-title">Lewis Bending Stress — Pinion</div>
+        <div class="result-grid">
+          <div class="result-item">
+            <div class="result-label">Lewis Form Factor (Y&#8321;)</div>
+            <div><span class="result-value" id="r-Y1">—</span><span class="result-unit"></span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Bending Stress (&sigma;&#x2062;&#8321;)</div>
+            <div><span class="result-value" id="r-sb1">—</span><span class="result-unit">MPa</span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Allowable Bending (&sigma;&#x2062;P&#8321;)</div>
+            <div><span class="result-value" id="r-sbp1">—</span><span class="result-unit">MPa</span></div>
+          </div>
+          <div class="result-item highlight" id="r-sf1-item">
+            <div class="result-label">Bending Safety Factor (S&#x2082;)</div>
+            <div><span class="result-value" id="r-sf1">—</span><span class="result-unit"></span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lewis Bending Stress — Gear -->
+      <div class="card card-body mt-16">
+        <div class="result-section-title">Lewis Bending Stress — Gear</div>
+        <div class="result-grid">
+          <div class="result-item">
+            <div class="result-label">Lewis Form Factor (Y&#8322;)</div>
+            <div><span class="result-value" id="r-Y2">—</span><span class="result-unit"></span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Bending Stress (&sigma;&#x2062;&#8322;)</div>
+            <div><span class="result-value" id="r-sb2">—</span><span class="result-unit">MPa</span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Allowable Bending (&sigma;&#x2062;P&#8322;)</div>
+            <div><span class="result-value" id="r-sbp2">—</span><span class="result-unit">MPa</span></div>
+          </div>
+          <div class="result-item highlight" id="r-sf2-item">
+            <div class="result-label">Bending Safety Factor (S&#x2082;)</div>
+            <div><span class="result-value" id="r-sf2">—</span><span class="result-unit"></span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hertz Contact Stress -->
+      <div class="card card-body mt-16">
+        <div class="result-section-title">Hertz Contact Stress</div>
+        <div class="result-grid">
+          <div class="result-item">
+            <div class="result-label">Elasticity Factor (Z&#x2091;)</div>
+            <div><span class="result-value" id="r-ZE">191</span><span class="result-unit">&radic;MPa</span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Contact Stress (&sigma;&#x210B;)</div>
+            <div><span class="result-value" id="r-sh">—</span><span class="result-unit">MPa</span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Allowable Contact (Pinion)</div>
+            <div><span class="result-value" id="r-shp1">—</span><span class="result-unit">MPa</span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Allowable Contact (Gear)</div>
+            <div><span class="result-value" id="r-shp2">—</span><span class="result-unit">MPa</span></div>
+          </div>
+          <div class="result-item highlight" id="r-sh1-item">
+            <div class="result-label">Contact Safety Factor S&#x210B;&#8321;</div>
+            <div><span class="result-value" id="r-shs1">—</span><span class="result-unit"></span></div>
+          </div>
+          <div class="result-item highlight" id="r-sh2-item">
+            <div class="result-label">Contact Safety Factor S&#x210B;&#8322;</div>
+            <div><span class="result-value" id="r-shs2">—</span><span class="result-unit"></span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Status banner -->
+      <div id="status-banner" class="card card-body mt-16" style="display:none">
+        <div id="status-content"></div>
+      </div>
+
+      <!-- Formulas -->
+      <div class="card card-body mt-16">
+        <div class="formula-block">
+          <div class="formula-title">Stress Formulas</div>
+          <div class="formula-row"><span class="formula-label">Design tangential force</span><span class="formula-expr">W&#x209C; = F&#x209C; &times; K&#x2090; &times; K&#x1D65;</span></div>
+          <div class="formula-row"><span class="formula-label">Lewis bending stress</span><span class="formula-expr">&sigma;&#x2062; = W&#x209C; / (b &times; m &times; Y)</span></div>
+          <div class="formula-row"><span class="formula-label">Hertz contact stress</span><span class="formula-expr">&sigma;&#x210B; = Z&#x2091; &radic;(W&#x209C; &times; (u+1) / (b &times; d&#8321; &times; u))</span></div>
+          <div class="formula-row"><span class="formula-label">Bending safety factor</span><span class="formula-expr">S&#x2082; = &sigma;&#x2062;P / &sigma;&#x2062; &ge; 1.5</span></div>
+          <div class="formula-row"><span class="formula-label">Contact safety factor</span><span class="formula-expr">S&#x210B; = &sigma;&#x210B;P / &sigma;&#x210B; &ge; 1.2</span></div>
+        </div>
+
+        <div class="formula-block mt-16">
+          <div class="formula-title">Lewis Form Factor Y (20° pressure angle)</div>
+          <table class="formula-table">
+            <thead><tr><th>Teeth</th><th>Y</th><th>Teeth</th><th>Y</th></tr></thead>
+            <tbody>
+              <tr><td>12</td><td>0.245</td><td>50</td><td>0.371</td></tr>
+              <tr><td>14</td><td>0.276</td><td>60</td><td>0.378</td></tr>
+              <tr><td>17</td><td>0.303</td><td>75</td><td>0.390</td></tr>
+              <tr><td>20</td><td>0.320</td><td>100</td><td>0.399</td></tr>
+              <tr><td>25</td><td>0.333</td><td>150</td><td>0.408</td></tr>
+              <tr><td>30</td><td>0.346</td><td>200</td><td>0.414</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Lewis form factor interpolation — 20°
+const LEWIS_Y = [
+  [12,0.245],[14,0.276],[17,0.303],[20,0.320],[25,0.333],
+  [30,0.346],[34,0.352],[38,0.358],[43,0.364],[50,0.371],
+  [60,0.378],[75,0.390],[100,0.399],[150,0.408],[200,0.414],[300,0.418]
+];
+function lewisY(z) {
+  if (z <= LEWIS_Y[0][0]) return LEWIS_Y[0][1];
+  if (z >= LEWIS_Y[LEWIS_Y.length-1][0]) return 0.421;
+  for (let i=0;i<LEWIS_Y.length-1;i++) {
+    if (z >= LEWIS_Y[i][0] && z <= LEWIS_Y[i+1][0]) {
+      const t = (z - LEWIS_Y[i][0]) / (LEWIS_Y[i+1][0] - LEWIS_Y[i][0]);
+      return LEWIS_Y[i][1] + t * (LEWIS_Y[i+1][1] - LEWIS_Y[i][1]);
+    }
+  }
+  return 0.38;
+}
+
+// Material properties: [σFP(MPa), σHP(MPa), label]
+const MATERIALS = {
+  ci:     [40,  300,  'Cast Iron FG 200'],
+  c40:    [130, 580,  'C40 Steel Normalized'],
+  c40ht:  [210, 800,  'C40Cr Heat Treated'],
+  alloy:  [300, 1200, '20MnCr5 Case Hardened']
+};
+
+function calc() {
+  const m    = parseFloat(document.getElementById('inp-module').value);
+  const z1   = parseInt(document.getElementById('inp-z1').value);
+  const z2   = parseInt(document.getElementById('inp-z2').value);
+  const b    = parseFloat(document.getElementById('inp-b').value);
+  const alpha= parseFloat(document.getElementById('inp-alpha').value) * Math.PI / 180;
+  const P    = parseFloat(document.getElementById('inp-power').value); // kW
+  const n1   = parseFloat(document.getElementById('inp-rpm').value);
+  const Kv   = parseFloat(document.getElementById('inp-kv').value);
+  const Ka   = parseFloat(document.getElementById('inp-ka').value);
+  const mat1 = document.getElementById('inp-mat1').value;
+  const mat2 = document.getElementById('inp-mat2').value;
+
+  const d1 = m * z1; // mm
+  const d2 = m * z2;
+  const u  = z2 / z1;
+
+  // Torque & forces
+  const T1  = 9549.3 * P / n1;         // N·m
+  const Ft  = 2000 * T1 / d1;          // N
+  const Fr  = Ft * Math.tan(alpha);
+  const Fn  = Ft / Math.cos(alpha);
+  const Wt  = Ft * Ka * Kv;            // design tangential force
+  const v   = Math.PI * d1 * n1 / 60000; // m/s
+
+  // Lewis form factors
+  const Y1 = lewisY(z1);
+  const Y2 = lewisY(z2);
+
+  // Bending stress σb = Wt / (b × m × Y)
+  const sb1 = Wt / (b * m * Y1);
+  const sb2 = Wt / (b * m * Y2);
+
+  // Allowable bending
+  const [sbp1, shp1] = [MATERIALS[mat1][0], MATERIALS[mat1][1]];
+  const [sbp2, shp2] = [MATERIALS[mat2][0], MATERIALS[mat2][1]];
+
+  // Safety factors — bending
+  const SF1 = sbp1 / sb1;
+  const SF2 = sbp2 / sb2;
+
+  // Hertz contact stress: σH = ZE × √(Wt × (u+1) / (b × d1 × u))
+  const ZE = 191; // √MPa for steel-steel (conservative)
+  const ZH = 2.5; // zone factor ≈20°
+  const sh = ZH * ZE * Math.sqrt(Wt * (u + 1) / (b * d1 * u));
+
+  // Contact safety factors
+  const SH1 = shp1 / sh;
+  const SH2 = shp2 / sh;
+
+  function set(id, val, d = 2) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.textContent = (val === null || isNaN(val) || !isFinite(val)) ? '—' : parseFloat(val.toFixed(d));
+  }
+
+  set('r-T1', T1, 2); set('r-Ft', Ft, 1); set('r-Fr', Fr, 1);
+  set('r-Fn', Fn, 1); set('r-Wt', Wt, 1); set('r-v',  v,  3);
+  set('r-Y1', Y1, 3); set('r-sb1', sb1, 2); set('r-sbp1', sbp1, 0); set('r-sf1', SF1, 2);
+  set('r-Y2', Y2, 3); set('r-sb2', sb2, 2); set('r-sbp2', sbp2, 0); set('r-sf2', SF2, 2);
+  set('r-sh', sh, 2); set('r-shp1', shp1, 0); set('r-shp2', shp2, 0);
+  set('r-shs1', SH1, 2); set('r-shs2', SH2, 2);
+
+  // Colour safety factor cells
+  function sfColor(id, val, low) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.classList.remove('sf-ok','sf-warn','sf-fail');
+    if (val >= low + 0.5) el.classList.add('sf-ok');
+    else if (val >= low)  el.classList.add('sf-warn');
+    else                  el.classList.add('sf-fail');
+  }
+  sfColor('r-sf1-item', SF1, 1.5);
+  sfColor('r-sf2-item', SF2, 1.5);
+  sfColor('r-sh1-item', SH1, 1.2);
+  sfColor('r-sh2-item', SH2, 1.2);
+
+  // Status banner
+  const allOk = SF1 >= 1.5 && SF2 >= 1.5 && SH1 >= 1.2 && SH2 >= 1.2;
+  const banner = document.getElementById('status-banner');
+  const content = document.getElementById('status-content');
+  banner.style.display = 'block';
+  if (allOk) {
+    content.innerHTML = '<div style="color:#22c55e;font-weight:700;font-size:15px">&#10003; Design is SAFE — all safety factors within limits</div><div style="font-size:12px;color:var(--text-muted);margin-top:4px">Min bending SF: ' + Math.min(SF1,SF2).toFixed(2) + ' &ge; 1.5 &nbsp;|&nbsp; Min contact SF: ' + Math.min(SH1,SH2).toFixed(2) + ' &ge; 1.2</div>';
+  } else {
+    let issues = [];
+    if (SF1 < 1.5) issues.push('Pinion bending SF = ' + SF1.toFixed(2));
+    if (SF2 < 1.5) issues.push('Gear bending SF = ' + SF2.toFixed(2));
+    if (SH1 < 1.2) issues.push('Pinion contact SF = ' + SH1.toFixed(2));
+    if (SH2 < 1.2) issues.push('Gear contact SF = ' + SH2.toFixed(2));
+    content.innerHTML = '<div style="color:#ef4444;font-weight:700;font-size:15px">&#10007; Design needs revision</div><div style="font-size:12px;color:var(--text-muted);margin-top:4px">' + issues.join(' &nbsp;&bull;&nbsp; ') + '</div><div style="font-size:11px;color:var(--text-muted);margin-top:4px">Try: increase module, face width, teeth count, or upgrade material</div>';
+  }
+
+  toast('Stress analysis complete');
+}
+
+document.getElementById('btn-calc').addEventListener('click', calc);
+['inp-module','inp-z1','inp-z2','inp-b','inp-alpha','inp-power','inp-rpm','inp-kv','inp-ka','inp-mat1','inp-mat2'].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) el.addEventListener('input', calc);
+  if (el && el.tagName === 'SELECT') el.addEventListener('change', calc);
+});
+
+calc();
+</script>
+
+<style>
+.sf-ok   { border-left:3px solid #22c55e; }
+.sf-warn { border-left:3px solid #f59e0b; }
+.sf-fail { border-left:3px solid #ef4444; }
+</style>
+</body>
+</html>

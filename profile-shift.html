@@ -10,16 +10,10 @@
 <script>buildNav('profile-shift');</script>
 <div class="main-content">
 
-  <div class="page-header">
-    <div>
-      <div class="page-title">Profile Shift (Addendum Modification)</div>
-      <div class="page-sub">x-coefficients → modified center distance, working pressure angle, tip/root diameters, contact ratio</div>
-    </div>
-    <div class="page-header-actions">
-      <button class="btn-secondary" onclick="clearCalc()">Clear</button>
-      <button class="btn-primary" id="btn-calc" onclick="calc(true)">Calculate</button>
-    </div>
-  </div>
+  <div class="page-header"><div>
+    <div class="page-title">Profile Shift (Addendum Modification)</div>
+    <div class="page-sub">x-coefficients → modified center distance, working pressure angle, tip/root diameters, contact ratio</div>
+  </div></div>
 
   <div class="calc-layout">
     <!-- Inputs -->
@@ -75,6 +69,8 @@
       <div class="tip-box mt-16">
         <strong>Positive shift</strong> (x &gt; 0) strengthens the tooth and avoids undercut. Standard gears use x = 0. Minimum to avoid undercut at 20°: x_min = (17 − z) / 17.
       </div>
+      <button class="btn-calc" id="btn-calc">Calculate</button>
+      <button class="btn-calc" onclick="clearCalc()" style="background:var(--bg-card);color:var(--text-muted);border:1px solid var(--border);margin-top:6px">Clear Results</button>
     </div>
 
     <!-- Results -->

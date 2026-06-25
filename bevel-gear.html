@@ -10,16 +10,10 @@
 <script>buildNav('bevel-gear');</script>
 <div class="main-content">
 
-  <div class="page-header">
-    <div>
-      <div class="page-title">Bevel Gear Calculator</div>
-      <div class="page-sub">Straight bevel gear geometry for 90° shaft angle — cone angles, diameters, virtual teeth</div>
-    </div>
-    <div class="page-header-actions">
-      <button class="btn-secondary" onclick="clearCalc()">Clear</button>
-      <button class="btn-primary" id="btn-calc" onclick="calc(true)">Calculate</button>
-    </div>
-  </div>
+  <div class="page-header"><div>
+    <div class="page-title">Bevel Gear Calculator</div>
+    <div class="page-sub">Straight bevel gear geometry for 90° shaft angle — cone angles, diameters, virtual teeth</div>
+  </div></div>
 
   <div class="calc-layout">
     <!-- Inputs -->
@@ -59,6 +53,8 @@
       <div class="tip-box mt-16">
         <strong>Shaft angle Σ = 90°</strong> (standard). Face width b is recommended ≤ R/3 and ≤ 10m for good load distribution.
       </div>
+      <button class="btn-calc" id="btn-calc">Calculate</button>
+      <button class="btn-calc" onclick="clearCalc()" style="background:var(--bg-card);color:var(--text-muted);border:1px solid var(--border);margin-top:6px">Clear Results</button>
     </div>
 
     <!-- Results -->

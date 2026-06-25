@@ -10,16 +10,10 @@
 <script>buildNav('worm-gear');</script>
 <div class="main-content">
 
-  <div class="page-header">
-    <div>
-      <div class="page-title">Worm &amp; Worm Wheel Calculator</div>
-      <div class="page-sub">Lead angle, center distance, sliding velocity, efficiency, self-locking check</div>
-    </div>
-    <div class="page-header-actions">
-      <button class="btn-secondary" onclick="clearCalc()">Clear</button>
-      <button class="btn-primary" id="btn-calc" onclick="calc(true)">Calculate</button>
-    </div>
-  </div>
+  <div class="page-header"><div>
+    <div class="page-title">Worm &amp; Worm Wheel Calculator</div>
+    <div class="page-sub">Lead angle, center distance, sliding velocity, efficiency, self-locking check</div>
+  </div></div>
 
   <div class="calc-layout">
     <!-- Inputs -->
@@ -78,6 +72,8 @@
       <div class="tip-box mt-16">
         <strong>Self-locking</strong> occurs when the lead angle γ ≤ friction angle φ = arctan(μ). The worm cannot be back-driven by the wheel load.
       </div>
+      <button class="btn-calc" id="btn-calc">Calculate</button>
+      <button class="btn-calc" onclick="clearCalc()" style="background:var(--bg-card);color:var(--text-muted);border:1px solid var(--border);margin-top:6px">Clear Results</button>
     </div>
 
     <!-- Results -->

@@ -10,16 +10,10 @@
 <script>buildNav('rack-pinion');</script>
 <div class="main-content">
 
-  <div class="page-header">
-    <div>
-      <div class="page-title">Rack &amp; Pinion Calculator</div>
-      <div class="page-sub">Linear travel, speed, force conversion and rack tooth geometry</div>
-    </div>
-    <div class="page-header-actions">
-      <button class="btn-secondary" onclick="clearCalc()">Clear</button>
-      <button class="btn-primary" id="btn-calc" onclick="calc(true)">Calculate</button>
-    </div>
-  </div>
+  <div class="page-header"><div>
+    <div class="page-title">Rack &amp; Pinion Calculator</div>
+    <div class="page-sub">Linear travel, speed, force conversion and rack tooth geometry</div>
+  </div></div>
 
   <div class="calc-layout">
     <!-- Inputs -->
@@ -71,6 +65,8 @@
       <div class="tip-box mt-16">
         <strong>Linear travel per revolution</strong> = π × PCD. Increasing pinion teeth or module increases travel and force capacity.
       </div>
+      <button class="btn-calc" id="btn-calc">Calculate</button>
+      <button class="btn-calc" onclick="clearCalc()" style="background:var(--bg-card);color:var(--text-muted);border:1px solid var(--border);margin-top:6px">Clear Results</button>
     </div>
 
     <!-- Results -->

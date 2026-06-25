@@ -236,7 +236,7 @@ function calcQuick() {
   if (P > 0 && N > 0) {
     qTorque.textContent = (P * 9549.3 / N).toFixed(1);
   } else {
-    qTorque.textContent = '&#8212;';
+    qTorque.textContent = '—';
   }
 }
 qPow.addEventListener('input', calcQuick);

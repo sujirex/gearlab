@@ -15,171 +15,180 @@
     <div class="page-sub">Straight bevel gear geometry for 90° shaft angle — cone angles, diameters, virtual teeth</div>
   </div></div>
 
-  <div class="calc-layout">
-    <!-- Inputs -->
-    <div class="calc-inputs">
-      <div class="card">
-        <div class="card-header">Gear Parameters</div>
-        <div class="card-body">
-
-          <div class="input-row">
-            <label class="input-label">Module <span class="input-unit">m</span></label>
-            <input type="number" id="inp-m" class="input-field" placeholder="2" min="0.1" step="0.5" value="2"/>
+  <div class="calc-grid">
+    <!-- Input Panel -->
+    <div>
+      <div class="card card-body input-panel">
+        <div class="field-group">
+          <div class="field-label">Module <span>— m</span></div>
+          <div class="field-row">
+            <input type="number" id="inp-m" placeholder="2" min="0.1" step="0.5" value="2"/>
           </div>
-          <div class="input-row">
-            <label class="input-label">Pinion Teeth <span class="input-unit">z₁</span></label>
-            <input type="number" id="inp-z1" class="input-field" placeholder="20" min="6" step="1" value="20"/>
-          </div>
-          <div class="input-row">
-            <label class="input-label">Gear Teeth <span class="input-unit">z₂</span></label>
-            <input type="number" id="inp-z2" class="input-field" placeholder="40" min="6" step="1" value="40"/>
-          </div>
-          <div class="input-row">
-            <label class="input-label">Pressure Angle <span class="input-unit">α °</span></label>
-            <input type="number" id="inp-alpha" class="input-field" placeholder="20" min="14.5" max="25" step="0.5" value="20"/>
-          </div>
-          <div class="input-row">
-            <label class="input-label">Face Width <span class="input-unit">b mm</span></label>
-            <input type="number" id="inp-b" class="input-field" placeholder="20" min="1" step="1" value="20"/>
-          </div>
-          <div class="input-row">
-            <label class="input-label">Pinion Speed <span class="input-unit">n₁ RPM</span></label>
-            <input type="number" id="inp-n1" class="input-field" placeholder="1450" min="1" step="10" value="1450"/>
-          </div>
-
         </div>
+        <div class="field-group">
+          <div class="field-label">Pinion Teeth <span>— z&#8321;</span></div>
+          <div class="field-row">
+            <input type="number" id="inp-z1" placeholder="20" min="6" step="1" value="20"/>
+            <div class="field-unit">teeth</div>
+          </div>
+        </div>
+        <div class="field-group">
+          <div class="field-label">Gear Teeth <span>— z&#8322;</span></div>
+          <div class="field-row">
+            <input type="number" id="inp-z2" placeholder="40" min="6" step="1" value="40"/>
+            <div class="field-unit">teeth</div>
+          </div>
+        </div>
+        <div class="field-group">
+          <div class="field-label">Pressure Angle <span>— &alpha;</span></div>
+          <select id="inp-alpha">
+            <option value="14.5">14.5&deg; (old standard)</option>
+            <option value="20" selected>20&deg; (ISO standard)</option>
+            <option value="25">25&deg; (heavy load)</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <div class="field-label">Face Width <span>— b</span></div>
+          <div class="field-row">
+            <input type="number" id="inp-b" placeholder="20" min="1" step="1" value="20"/>
+            <div class="field-unit">mm</div>
+          </div>
+        </div>
+        <hr class="field-divider"/>
+        <div class="field-group">
+          <div class="field-label">Pinion Speed <span>— optional</span></div>
+          <div class="field-row">
+            <input type="number" id="inp-n1" placeholder="1450" min="1" step="10" value="1450"/>
+            <div class="field-unit">RPM</div>
+          </div>
+        </div>
+        <div class="tip-box">
+          <strong>Shaft angle &Sigma; = 90&deg;</strong> (standard). Face width b &le; R/3 and &le; 10m recommended for good load distribution.
+        </div>
+        <button class="btn-calc" id="btn-calc">Calculate</button>
+        <button class="btn-calc" onclick="clearCalc()" style="background:var(--bg-card);color:var(--text-muted);border:1px solid var(--border);margin-top:6px">Clear Results</button>
       </div>
-
-      <div class="tip-box mt-16">
-        <strong>Shaft angle Σ = 90°</strong> (standard). Face width b is recommended ≤ R/3 and ≤ 10m for good load distribution.
-      </div>
-      <button class="btn-calc" id="btn-calc">Calculate</button>
-      <button class="btn-calc" onclick="clearCalc()" style="background:var(--bg-card);color:var(--text-muted);border:1px solid var(--border);margin-top:6px">Clear Results</button>
     </div>
 
     <!-- Results -->
-    <div class="calc-results">
+    <div>
 
-      <!-- Ratio & Angles -->
       <div class="card">
         <div class="card-header">Ratio &amp; Cone Angles</div>
         <div class="card-body result-grid">
           <div class="result-item">
             <div class="result-label">Gear Ratio <em>i</em></div>
-            <div class="result-value"><span id="r-ratio">—</span></div>
+            <div class="result-value"><span id="r-ratio">&#8212;</span></div>
           </div>
           <div class="result-item">
-            <div class="result-label">Pinion Pitch Cone Angle <em>δ₁</em></div>
-            <div class="result-value"><span id="r-d1">—</span> <span class="result-unit">°</span></div>
+            <div class="result-label">Pinion Pitch Cone Angle <em>&delta;&#8321;</em></div>
+            <div class="result-value"><span id="r-d1">&#8212;</span> <span class="result-unit">&deg;</span></div>
           </div>
           <div class="result-item">
-            <div class="result-label">Gear Pitch Cone Angle <em>δ₂</em></div>
-            <div class="result-value"><span id="r-d2">—</span> <span class="result-unit">°</span></div>
+            <div class="result-label">Gear Pitch Cone Angle <em>&delta;&#8322;</em></div>
+            <div class="result-value"><span id="r-d2">&#8212;</span> <span class="result-unit">&deg;</span></div>
           </div>
           <div class="result-item">
-            <div class="result-label">Pinion Face Angle <em>δa₁</em></div>
-            <div class="result-value"><span id="r-da1-ang">—</span> <span class="result-unit">°</span></div>
+            <div class="result-label">Pinion Face Angle <em>&delta;a&#8321;</em></div>
+            <div class="result-value"><span id="r-da1">&#8212;</span> <span class="result-unit">&deg;</span></div>
           </div>
           <div class="result-item">
-            <div class="result-label">Gear Face Angle <em>δa₂</em></div>
-            <div class="result-value"><span id="r-da2-ang">—</span> <span class="result-unit">°</span></div>
+            <div class="result-label">Gear Face Angle <em>&delta;a&#8322;</em></div>
+            <div class="result-value"><span id="r-da2">&#8212;</span> <span class="result-unit">&deg;</span></div>
           </div>
           <div class="result-item">
-            <div class="result-label">Pinion Root Angle <em>δf₁</em></div>
-            <div class="result-value"><span id="r-df1-ang">—</span> <span class="result-unit">°</span></div>
+            <div class="result-label">Pinion Root Angle <em>&delta;f&#8321;</em></div>
+            <div class="result-value"><span id="r-df1">&#8212;</span> <span class="result-unit">&deg;</span></div>
           </div>
           <div class="result-item">
-            <div class="result-label">Gear Root Angle <em>δf₂</em></div>
-            <div class="result-value"><span id="r-df2-ang">—</span> <span class="result-unit">°</span></div>
+            <div class="result-label">Gear Root Angle <em>&delta;f&#8322;</em></div>
+            <div class="result-value"><span id="r-df2">&#8212;</span> <span class="result-unit">&deg;</span></div>
           </div>
         </div>
       </div>
 
-      <!-- Reference Diameters -->
       <div class="card mt-16">
-        <div class="card-header">Reference Diameters</div>
-        <div class="card-body result-grid">
-          <div class="result-item">
-            <div class="result-label">Pinion Ref PCD <em>d₁</em></div>
-            <div class="result-value"><span id="r-d1-pcd">—</span> <span class="result-unit">mm</span></div>
-          </div>
-          <div class="result-item">
-            <div class="result-label">Gear Ref PCD <em>d₂</em></div>
-            <div class="result-value"><span id="r-d2-pcd">—</span> <span class="result-unit">mm</span></div>
-          </div>
-          <div class="result-item">
-            <div class="result-label">Pinion Mean PCD <em>dm₁</em></div>
-            <div class="result-value"><span id="r-dm1">—</span> <span class="result-unit">mm</span></div>
-          </div>
-          <div class="result-item">
-            <div class="result-label">Gear Mean PCD <em>dm₂</em></div>
-            <div class="result-value"><span id="r-dm2">—</span> <span class="result-unit">mm</span></div>
-          </div>
-          <div class="result-item">
-            <div class="result-label">Pinion Tip Diameter <em>da₁</em></div>
-            <div class="result-value"><span id="r-da1">—</span> <span class="result-unit">mm</span></div>
-          </div>
-          <div class="result-item">
-            <div class="result-label">Gear Tip Diameter <em>da₂</em></div>
-            <div class="result-value"><span id="r-da2">—</span> <span class="result-unit">mm</span></div>
-          </div>
-          <div class="result-item">
-            <div class="result-label">Pinion Root Diameter <em>df₁</em></div>
-            <div class="result-value"><span id="r-df1">—</span> <span class="result-unit">mm</span></div>
-          </div>
-          <div class="result-item">
-            <div class="result-label">Gear Root Diameter <em>df₂</em></div>
-            <div class="result-value"><span id="r-df2">—</span> <span class="result-unit">mm</span></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Cone & Virtual Teeth -->
-      <div class="card mt-16">
-        <div class="card-header">Cone Data &amp; Virtual Teeth</div>
+        <div class="card-header">Pitch Cone Geometry</div>
         <div class="card-body result-grid">
           <div class="result-item">
             <div class="result-label">Cone Distance <em>R</em></div>
-            <div class="result-value"><span id="r-R">—</span> <span class="result-unit">mm</span></div>
+            <div class="result-value"><span id="r-R">&#8212;</span> <span class="result-unit">mm</span></div>
           </div>
           <div class="result-item">
             <div class="result-label">Mean Cone Distance <em>Rm</em></div>
-            <div class="result-value"><span id="r-Rm">—</span> <span class="result-unit">mm</span></div>
+            <div class="result-value"><span id="r-Rm">&#8212;</span> <span class="result-unit">mm</span></div>
           </div>
           <div class="result-item">
-            <div class="result-label">Back Cone Radius <em>rb₁</em></div>
-            <div class="result-value"><span id="r-rb1">—</span> <span class="result-unit">mm</span></div>
+            <div class="result-label">Pinion Ref PCD <em>d&#8321;</em></div>
+            <div class="result-value"><span id="r-pd1">&#8212;</span> <span class="result-unit">mm</span></div>
           </div>
           <div class="result-item">
-            <div class="result-label">Back Cone Radius <em>rb₂</em></div>
-            <div class="result-value"><span id="r-rb2">—</span> <span class="result-unit">mm</span></div>
+            <div class="result-label">Gear Ref PCD <em>d&#8322;</em></div>
+            <div class="result-value"><span id="r-pd2">&#8212;</span> <span class="result-unit">mm</span></div>
           </div>
           <div class="result-item">
-            <div class="result-label">Virtual Teeth (Pinion) <em>zv₁</em></div>
-            <div class="result-value"><span id="r-zv1">—</span></div>
+            <div class="result-label">Pinion Mean PCD <em>dm&#8321;</em></div>
+            <div class="result-value"><span id="r-dm1">&#8212;</span> <span class="result-unit">mm</span></div>
           </div>
           <div class="result-item">
-            <div class="result-label">Virtual Teeth (Gear) <em>zv₂</em></div>
-            <div class="result-value"><span id="r-zv2">—</span></div>
+            <div class="result-label">Gear Mean PCD <em>dm&#8322;</em></div>
+            <div class="result-value"><span id="r-dm2">&#8212;</span> <span class="result-unit">mm</span></div>
           </div>
           <div class="result-item">
-            <div class="result-label">b / R ratio</div>
-            <div class="result-value"><span id="r-br">—</span></div>
+            <div class="result-label">b/R Ratio <span id="r-br-warn"></span></div>
+            <div class="result-value"><span id="r-br">&#8212;</span></div>
           </div>
         </div>
       </div>
 
-      <!-- Dynamic -->
       <div class="card mt-16">
-        <div class="card-header">Speed &amp; Velocity</div>
+        <div class="card-header">Tip &amp; Root Diameters</div>
         <div class="card-body result-grid">
           <div class="result-item">
-            <div class="result-label">Output Speed <em>n₂</em></div>
-            <div class="result-value"><span id="r-n2">—</span> <span class="result-unit">RPM</span></div>
+            <div class="result-label">Pinion Tip Dia <em>da&#8321;</em></div>
+            <div class="result-value"><span id="r-doa1">&#8212;</span> <span class="result-unit">mm</span></div>
           </div>
           <div class="result-item">
-            <div class="result-label">Pitch Line Velocity (mean) <em>v</em></div>
-            <div class="result-value"><span id="r-v">—</span> <span class="result-unit">m/s</span></div>
+            <div class="result-label">Gear Tip Dia <em>da&#8322;</em></div>
+            <div class="result-value"><span id="r-doa2">&#8212;</span> <span class="result-unit">mm</span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Pinion Root Dia <em>df&#8321;</em></div>
+            <div class="result-value"><span id="r-dof1">&#8212;</span> <span class="result-unit">mm</span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Gear Root Dia <em>df&#8322;</em></div>
+            <div class="result-value"><span id="r-dof2">&#8212;</span> <span class="result-unit">mm</span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Back Cone Radius <em>rb&#8321;</em></div>
+            <div class="result-value"><span id="r-rb1">&#8212;</span> <span class="result-unit">mm</span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Back Cone Radius <em>rb&#8322;</em></div>
+            <div class="result-value"><span id="r-rb2">&#8212;</span> <span class="result-unit">mm</span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Virtual Teeth <em>zv&#8321;</em></div>
+            <div class="result-value"><span id="r-zv1">&#8212;</span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Virtual Teeth <em>zv&#8322;</em></div>
+            <div class="result-value"><span id="r-zv2">&#8212;</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mt-16">
+        <div class="card-header">Speed</div>
+        <div class="card-body result-grid">
+          <div class="result-item">
+            <div class="result-label">Output Speed <em>n&#8322;</em></div>
+            <div class="result-value"><span id="r-n2">&#8212;</span> <span class="result-unit">RPM</span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Pitch Line Velocity</div>
+            <div class="result-value"><span id="r-v">&#8212;</span> <span class="result-unit">m/s</span></div>
           </div>
         </div>
       </div>
@@ -194,115 +203,107 @@ const inputs = ['inp-m','inp-z1','inp-z2','inp-alpha','inp-b','inp-n1'];
 inputs.forEach(id => document.getElementById(id).addEventListener('input', () => calc(false)));
 
 function calc(showToast = false) {
-  const m  = parseFloat(document.getElementById('inp-m').value);
-  const z1 = parseFloat(document.getElementById('inp-z1').value);
-  const z2 = parseFloat(document.getElementById('inp-z2').value);
-  const a  = parseFloat(document.getElementById('inp-alpha').value);
-  const b  = parseFloat(document.getElementById('inp-b').value);
-  const n1 = parseFloat(document.getElementById('inp-n1').value);
+  const m     = parseFloat(document.getElementById('inp-m').value);
+  const z1    = parseFloat(document.getElementById('inp-z1').value);
+  const z2    = parseFloat(document.getElementById('inp-z2').value);
+  const alpha = parseFloat(document.getElementById('inp-alpha').value) * Math.PI / 180;
+  const b     = parseFloat(document.getElementById('inp-b').value);
+  const n1    = parseFloat(document.getElementById('inp-n1').value);
 
-  if ([m, z1, z2, a, b, n1].some(v => isNaN(v) || v <= 0)) return;
-  if (z1 < 6 || z2 < 6) { toast('Minimum 6 teeth required', 'fail'); return; }
+  if ([m, z1, z2].some(v => isNaN(v) || v <= 0)) return;
 
-  const toRad = d => d * Math.PI / 180;
-  const toDeg = r => r * 180 / Math.PI;
+  const ratio = z2 / z1;
+  const delta1 = Math.atan(z1 / z2);        // pinion pitch cone angle
+  const delta2 = Math.PI / 2 - delta1;      // gear pitch cone angle (90 - delta1)
 
-  // Cone angles
-  const delta1 = Math.atan(z1 / z2);
-  const delta2 = Math.PI / 2 - delta1;
+  // Pitch cone distance
+  const R  = (m / 2) * Math.sqrt(z1 * z1 + z2 * z2);
+  const Rm = R - b / 2;                     // mean cone distance
 
-  // Reference PCDs
-  const d1 = m * z1;
-  const d2 = m * z2;
-
-  // Cone distance
-  const R = (m / 2) * Math.sqrt(z1 * z1 + z2 * z2);
-
-  // Face width check
-  const bOverR = b / R;
-
-  // Mean cone distance
-  const Rm = R - b / 2;
+  // Reference PCDs (at large end)
+  const pd1 = m * z1;
+  const pd2 = m * z2;
 
   // Mean PCDs
   const dm1 = 2 * Rm * Math.sin(delta1);
   const dm2 = 2 * Rm * Math.sin(delta2);
 
-  // Addendum / dedendum (outer, standard)
-  const ha = m;
-  const hf = 1.25 * m;
+  // Face / root angles
+  const thetaA = Math.atan(m / R);          // addendum angle
+  const thetaF = Math.atan(1.25 * m / R);   // dedendum angle
+  const da1 = delta1 + thetaA;
+  const da2 = delta2 + thetaA;
+  const df1 = delta1 - thetaF;
+  const df2 = delta2 - thetaF;
 
-  // Tip diameters (outer)
-  const da1 = d1 + 2 * ha * Math.cos(delta1);
-  const da2 = d2 + 2 * ha * Math.cos(delta2);
+  // Tip & root diameters (at large end)
+  const doa1 = pd1 + 2 * m * Math.cos(delta1);
+  const doa2 = pd2 + 2 * m * Math.cos(delta2);
+  const dof1 = pd1 - 2.5 * m * Math.cos(delta1);
+  const dof2 = pd2 - 2.5 * m * Math.cos(delta2);
 
-  // Root diameters (outer)
-  const df1 = d1 - 2 * hf * Math.cos(delta1);
-  const df2 = d2 - 2 * hf * Math.cos(delta2);
+  // Back cone radii
+  const rb1 = pd1 / (2 * Math.cos(delta1));
+  const rb2 = pd2 / (2 * Math.cos(delta2));
 
-  // Face angle (tip angle)
-  const da1_ang = toDeg(delta1) + toDeg(Math.atan(ha / R));
-  const da2_ang = toDeg(delta2) + toDeg(Math.atan(ha / R));
-
-  // Root angle
-  const df1_ang = toDeg(delta1) - toDeg(Math.atan(hf / R));
-  const df2_ang = toDeg(delta2) - toDeg(Math.atan(hf / R));
-
-  // Back cone radius
-  const rb1 = d1 / (2 * Math.cos(delta1));
-  const rb2 = d2 / (2 * Math.cos(delta2));
-
-  // Virtual (formative) teeth
+  // Virtual (equivalent spur gear) teeth
   const zv1 = z1 / Math.cos(delta1);
   const zv2 = z2 / Math.cos(delta2);
 
-  // Speed
-  const ratio = z2 / z1;
-  const n2 = n1 / ratio;
+  // Speed & velocity
+  const n2 = isNaN(n1) || n1 <= 0 ? null : n1 / ratio;
+  const v  = n2 !== null ? Math.PI * dm1 * n1 / 60000 : null;
 
-  // Pitch line velocity at mean PCD
-  const v = Math.PI * dm1 * n1 / 60000;
+  // b/R check
+  const brRatio = isNaN(b) || b <= 0 ? null : b / R;
 
   // Populate
-  setResult('r-ratio',   ratio, 3);
-  setResult('r-d1',      toDeg(delta1), 3);
-  setResult('r-d2',      toDeg(delta2), 3);
-  setResult('r-da1-ang', da1_ang, 3);
-  setResult('r-da2-ang', da2_ang, 3);
-  setResult('r-df1-ang', df1_ang, 3);
-  setResult('r-df2-ang', df2_ang, 3);
-
-  setResult('r-d1-pcd', d1, 3);
-  setResult('r-d2-pcd', d2, 3);
-  setResult('r-dm1',    dm1, 3);
-  setResult('r-dm2',    dm2, 3);
-  setResult('r-da1',    da1, 3);
-  setResult('r-da2',    da2, 3);
-  setResult('r-df1',    df1, 3);
-  setResult('r-df2',    df2, 3);
+  const toDeg = r => r * 180 / Math.PI;
+  setResult('r-ratio', ratio, 3);
+  setResult('r-d1',  toDeg(delta1), 3);
+  setResult('r-d2',  toDeg(delta2), 3);
+  setResult('r-da1', toDeg(da1), 3);
+  setResult('r-da2', toDeg(da2), 3);
+  setResult('r-df1', toDeg(df1), 3);
+  setResult('r-df2', toDeg(df2), 3);
 
   setResult('r-R',   R, 3);
   setResult('r-Rm',  Rm, 3);
-  setResult('r-rb1', rb1, 3);
-  setResult('r-rb2', rb2, 3);
-  setResult('r-zv1', zv1, 2);
-  setResult('r-zv2', zv2, 2);
-  document.getElementById('r-br').textContent = bOverR.toFixed(3) + (bOverR > 0.333 ? '  ⚠ > R/3' : '  ✓');
+  setResult('r-pd1', pd1, 3);
+  setResult('r-pd2', pd2, 3);
+  setResult('r-dm1', dm1, 3);
+  setResult('r-dm2', dm2, 3);
+
+  if (brRatio !== null) {
+    const el = document.getElementById('r-br');
+    el.textContent = brRatio.toFixed(3);
+    el.style.color = brRatio > 1/3 ? '#f8a100' : '';
+    document.getElementById('r-br-warn').textContent = brRatio > 1/3 ? '⚠ > 1/3' : '';
+  }
+
+  setResult('r-doa1', doa1, 3);
+  setResult('r-doa2', doa2, 3);
+  setResult('r-dof1', dof1, 3);
+  setResult('r-dof2', dof2, 3);
+  setResult('r-rb1',  rb1, 3);
+  setResult('r-rb2',  rb2, 3);
+  setResult('r-zv1',  zv1, 2);
+  setResult('r-zv2',  zv2, 2);
 
   setResult('r-n2', n2, 1);
-  setResult('r-v',  v,  3);
+  setResult('r-v',  v, 3);
 
   if (showToast) toast('Bevel gear calculated');
 }
 
 function clearCalc() {
-  document.getElementById('inp-b').value  = '';
   document.getElementById('inp-n1').value = '';
-  const ids = ['r-ratio','r-d1','r-d2','r-da1-ang','r-da2-ang','r-df1-ang','r-df2-ang',
-    'r-d1-pcd','r-d2-pcd','r-dm1','r-dm2','r-da1','r-da2','r-df1','r-df2',
-    'r-R','r-Rm','r-rb1','r-rb2','r-zv1','r-zv2','r-n2','r-v'];
-  ids.forEach(id => { const el = document.getElementById(id); if (el) el.textContent = '—'; });
-  document.getElementById('r-br').textContent = '—';
+  const ids = ['r-ratio','r-d1','r-d2','r-da1','r-da2','r-df1','r-df2',
+    'r-R','r-Rm','r-pd1','r-pd2','r-dm1','r-dm2','r-br',
+    'r-doa1','r-doa2','r-dof1','r-dof2','r-rb1','r-rb2','r-zv1','r-zv2',
+    'r-n2','r-v'];
+  ids.forEach(id => { const el = document.getElementById(id); if (el) { el.textContent = '\u2014'; el.style.color = ''; } });
+  document.getElementById('r-br-warn').textContent = '';
 }
 
 document.getElementById('btn-calc').addEventListener('click', () => calc(true));

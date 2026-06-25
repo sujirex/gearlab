@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
 <head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Worm Gear Calculator — GearLab</title>
+<title>Worm Gear Calculator &mdash; GearLab</title>
 <link rel="icon" href="favicon.svg"/>
 <link rel="stylesheet" href="css/style.css"/>
 </head>
@@ -15,159 +15,156 @@
     <div class="page-sub">Lead angle, center distance, sliding velocity, efficiency, self-locking check</div>
   </div></div>
 
-  <div class="calc-layout">
-    <!-- Inputs -->
-    <div class="calc-inputs">
-      <div class="card">
-        <div class="card-header">Worm Parameters</div>
-        <div class="card-body">
-
-          <div class="input-row">
-            <label class="input-label">Axial Module <span class="input-unit">m</span></label>
-            <input type="number" id="inp-m" class="input-field" placeholder="2" min="0.1" step="0.5" value="2"/>
+  <div class="calc-grid">
+    <!-- Input Panel -->
+    <div>
+      <div class="card card-body input-panel">
+        <div class="field-group">
+          <div class="field-label">Axial Module <span>&#8212; m</span></div>
+          <div class="field-row">
+            <input type="number" id="inp-m" placeholder="2" min="0.1" step="0.5" value="2"/>
           </div>
-          <div class="input-row">
-            <label class="input-label">No. of Starts (Worm) <span class="input-unit">z₁</span></label>
-            <select id="inp-z1" class="input-field">
-              <option value="1" selected>1 (high ratio)</option>
-              <option value="2">2</option>
-              <option value="4">4</option>
-              <option value="6">6</option>
-            </select>
-          </div>
-          <div class="input-row">
-            <label class="input-label">Wheel Teeth <span class="input-unit">z₂</span></label>
-            <input type="number" id="inp-z2" class="input-field" placeholder="40" min="20" step="1" value="40"/>
-          </div>
-          <div class="input-row">
-            <label class="input-label">Diameter Quotient <span class="input-unit">q</span></label>
-            <input type="number" id="inp-q" class="input-field" placeholder="10" min="6" max="20" step="0.5" value="10"/>
-            <small class="input-hint">ISO standard: 8, 10, 12.5, 16</small>
-          </div>
-
         </div>
-      </div>
-
-      <div class="card mt-16">
-        <div class="card-header">Operating Parameters</div>
-        <div class="card-body">
-
-          <div class="input-row">
-            <label class="input-label">Worm Speed <span class="input-unit">n₁ RPM</span></label>
-            <input type="number" id="inp-n1" class="input-field" placeholder="1450" min="1" step="10" value="1450"/>
-          </div>
-          <div class="input-row">
-            <label class="input-label">Input Torque (worm) <span class="input-unit">T₁ N·m</span></label>
-            <input type="number" id="inp-t1" class="input-field" placeholder="50" min="0.01" step="1" value="50"/>
-          </div>
-          <div class="input-row">
-            <label class="input-label">Coefficient of Friction <span class="input-unit">μ</span></label>
-            <input type="number" id="inp-mu" class="input-field" placeholder="0.05" min="0.01" max="0.15" step="0.005" value="0.05"/>
-            <small class="input-hint">Bronze wheel, lubricated: 0.04–0.06</small>
-          </div>
-
+        <div class="field-group">
+          <div class="field-label">No. of Starts (Worm) <span>&#8212; z&#8321;</span></div>
+          <select id="inp-z1">
+            <option value="1" selected>1 (high ratio)</option>
+            <option value="2">2</option>
+            <option value="4">4</option>
+            <option value="6">6</option>
+          </select>
         </div>
+        <div class="field-group">
+          <div class="field-label">Wheel Teeth <span>&#8212; z&#8322;</span></div>
+          <div class="field-row">
+            <input type="number" id="inp-z2" placeholder="40" min="20" step="1" value="40"/>
+            <div class="field-unit">teeth</div>
+          </div>
+        </div>
+        <div class="field-group">
+          <div class="field-label">Diameter Quotient <span>&#8212; q &nbsp; ISO: 8, 10, 12.5, 16</span></div>
+          <div class="field-row">
+            <input type="number" id="inp-q" placeholder="10" min="6" max="20" step="0.5" value="10"/>
+          </div>
+        </div>
+        <hr class="field-divider"/>
+        <div class="field-group">
+          <div class="field-label">Worm Speed <span>&#8212; n&#8321;</span></div>
+          <div class="field-row">
+            <input type="number" id="inp-n1" placeholder="1450" min="1" step="10" value="1450"/>
+            <div class="field-unit">RPM</div>
+          </div>
+        </div>
+        <div class="field-group">
+          <div class="field-label">Input Torque (worm) <span>&#8212; T&#8321;</span></div>
+          <div class="field-row">
+            <input type="number" id="inp-t1" placeholder="50" min="0.01" step="1" value="50"/>
+            <div class="field-unit">N&middot;m</div>
+          </div>
+        </div>
+        <div class="field-group">
+          <div class="field-label">Coefficient of Friction <span>&#8212; &mu; &nbsp; Bronze: 0.04&ndash;0.06</span></div>
+          <div class="field-row">
+            <input type="number" id="inp-mu" placeholder="0.05" min="0.01" max="0.15" step="0.005" value="0.05"/>
+          </div>
+        </div>
+        <div class="tip-box">
+          <strong>Self-locking</strong> occurs when lead angle &gamma; &le; friction angle &phi; = arctan(&mu;). The worm cannot be back-driven by the wheel load.
+        </div>
+        <button class="btn-calc" id="btn-calc">Calculate</button>
+        <button class="btn-calc" onclick="clearCalc()" style="background:var(--bg-card);color:var(--text-muted);border:1px solid var(--border);margin-top:6px">Clear Results</button>
       </div>
-
-      <div class="tip-box mt-16">
-        <strong>Self-locking</strong> occurs when the lead angle γ ≤ friction angle φ = arctan(μ). The worm cannot be back-driven by the wheel load.
-      </div>
-      <button class="btn-calc" id="btn-calc">Calculate</button>
-      <button class="btn-calc" onclick="clearCalc()" style="background:var(--bg-card);color:var(--text-muted);border:1px solid var(--border);margin-top:6px">Clear Results</button>
     </div>
 
     <!-- Results -->
-    <div class="calc-results">
+    <div>
 
-      <!-- Geometry -->
       <div class="card">
         <div class="card-header">Geometry</div>
         <div class="card-body result-grid">
           <div class="result-item">
             <div class="result-label">Gear Ratio <em>i</em></div>
-            <div class="result-value"><span id="r-ratio">—</span></div>
+            <div class="result-value"><span id="r-ratio">&#8212;</span></div>
           </div>
           <div class="result-item">
-            <div class="result-label">Worm PCD <em>d₁</em></div>
-            <div class="result-value"><span id="r-d1">—</span> <span class="result-unit">mm</span></div>
+            <div class="result-label">Worm PCD <em>d&#8321;</em></div>
+            <div class="result-value"><span id="r-d1">&#8212;</span> <span class="result-unit">mm</span></div>
           </div>
           <div class="result-item">
-            <div class="result-label">Wheel PCD <em>d₂</em></div>
-            <div class="result-value"><span id="r-d2">—</span> <span class="result-unit">mm</span></div>
+            <div class="result-label">Wheel PCD <em>d&#8322;</em></div>
+            <div class="result-value"><span id="r-d2">&#8212;</span> <span class="result-unit">mm</span></div>
           </div>
           <div class="result-item">
             <div class="result-label">Center Distance <em>a</em></div>
-            <div class="result-value"><span id="r-a">—</span> <span class="result-unit">mm</span></div>
+            <div class="result-value"><span id="r-a">&#8212;</span> <span class="result-unit">mm</span></div>
           </div>
           <div class="result-item">
             <div class="result-label">Worm Lead <em>pz</em></div>
-            <div class="result-value"><span id="r-lead">—</span> <span class="result-unit">mm</span></div>
+            <div class="result-value"><span id="r-lead">&#8212;</span> <span class="result-unit">mm</span></div>
           </div>
           <div class="result-item">
-            <div class="result-label">Lead Angle <em>γ</em></div>
-            <div class="result-value"><span id="r-gamma">—</span> <span class="result-unit">°</span></div>
+            <div class="result-label">Lead Angle <em>&gamma;</em></div>
+            <div class="result-value"><span id="r-gamma">&#8212;</span> <span class="result-unit">&deg;</span></div>
           </div>
         </div>
       </div>
 
-      <!-- Tip / Root Diameters -->
       <div class="card mt-16">
         <div class="card-header">Tip &amp; Root Diameters</div>
         <div class="card-body result-grid">
           <div class="result-item">
-            <div class="result-label">Worm Tip Diameter <em>da₁</em></div>
-            <div class="result-value"><span id="r-da1">—</span> <span class="result-unit">mm</span></div>
+            <div class="result-label">Worm Tip Diameter <em>da&#8321;</em></div>
+            <div class="result-value"><span id="r-da1">&#8212;</span> <span class="result-unit">mm</span></div>
           </div>
           <div class="result-item">
-            <div class="result-label">Worm Root Diameter <em>df₁</em></div>
-            <div class="result-value"><span id="r-df1">—</span> <span class="result-unit">mm</span></div>
+            <div class="result-label">Worm Root Diameter <em>df&#8321;</em></div>
+            <div class="result-value"><span id="r-df1">&#8212;</span> <span class="result-unit">mm</span></div>
           </div>
           <div class="result-item">
-            <div class="result-label">Wheel Tip Diameter <em>da₂</em></div>
-            <div class="result-value"><span id="r-da2">—</span> <span class="result-unit">mm</span></div>
+            <div class="result-label">Wheel Tip Diameter <em>da&#8322;</em></div>
+            <div class="result-value"><span id="r-da2">&#8212;</span> <span class="result-unit">mm</span></div>
           </div>
           <div class="result-item">
-            <div class="result-label">Wheel Root Diameter <em>df₂</em></div>
-            <div class="result-value"><span id="r-df2">—</span> <span class="result-unit">mm</span></div>
+            <div class="result-label">Wheel Root Diameter <em>df&#8322;</em></div>
+            <div class="result-value"><span id="r-df2">&#8212;</span> <span class="result-unit">mm</span></div>
           </div>
           <div class="result-item">
-            <div class="result-label">Wheel Throat Diameter <em>dt₂</em></div>
-            <div class="result-value"><span id="r-dt2">—</span> <span class="result-unit">mm</span></div>
+            <div class="result-label">Wheel Throat Diameter <em>dt&#8322;</em></div>
+            <div class="result-value"><span id="r-dt2">&#8212;</span> <span class="result-unit">mm</span></div>
           </div>
         </div>
       </div>
 
-      <!-- Efficiency & Speed -->
       <div class="card mt-16">
         <div class="card-header">Performance</div>
         <div class="card-body result-grid">
           <div class="result-item">
             <div class="result-label">Sliding Velocity <em>vs</em></div>
-            <div class="result-value"><span id="r-vs">—</span> <span class="result-unit">m/s</span></div>
+            <div class="result-value"><span id="r-vs">&#8212;</span> <span class="result-unit">m/s</span></div>
           </div>
           <div class="result-item">
-            <div class="result-label">Friction Angle <em>φ</em></div>
-            <div class="result-value"><span id="r-phi">—</span> <span class="result-unit">°</span></div>
+            <div class="result-label">Friction Angle <em>&phi;</em></div>
+            <div class="result-value"><span id="r-phi">&#8212;</span> <span class="result-unit">&deg;</span></div>
           </div>
           <div class="result-item">
-            <div class="result-label">Efficiency <em>η</em></div>
-            <div class="result-value"><span id="r-eta">—</span> <span class="result-unit">%</span></div>
+            <div class="result-label">Efficiency <em>&eta;</em></div>
+            <div class="result-value"><span id="r-eta">&#8212;</span> <span class="result-unit">%</span></div>
           </div>
           <div class="result-item">
             <div class="result-label">Self-Locking</div>
-            <div class="result-value"><span id="r-sl">—</span></div>
+            <div class="result-value"><span id="r-sl">&#8212;</span></div>
           </div>
           <div class="result-item">
-            <div class="result-label">Output Speed <em>n₂</em></div>
-            <div class="result-value"><span id="r-n2">—</span> <span class="result-unit">RPM</span></div>
+            <div class="result-label">Output Speed <em>n&#8322;</em></div>
+            <div class="result-value"><span id="r-n2">&#8212;</span> <span class="result-unit">RPM</span></div>
           </div>
           <div class="result-item">
-            <div class="result-label">Output Torque <em>T₂</em></div>
-            <div class="result-value"><span id="r-t2">—</span> <span class="result-unit">N·m</span></div>
+            <div class="result-label">Output Torque <em>T&#8322;</em></div>
+            <div class="result-value"><span id="r-t2">&#8212;</span> <span class="result-unit">N&middot;m</span></div>
           </div>
           <div class="result-item">
-            <div class="result-label">Output Power <em>P₂</em></div>
-            <div class="result-value"><span id="r-p2">—</span> <span class="result-unit">kW</span></div>
+            <div class="result-label">Output Power <em>P&#8322;</em></div>
+            <div class="result-value"><span id="r-p2">&#8212;</span> <span class="result-unit">kW</span></div>
           </div>
         </div>
       </div>
@@ -192,57 +189,46 @@ function calc(showToast = false) {
 
   if ([m, z1, z2, q, n1, T1, mu].some(v => isNaN(v) || v <= 0)) return;
 
-  // Geometry
-  const d1 = q * m;                         // Worm PCD
-  const d2 = m * z2;                        // Wheel PCD
-  const a  = (d1 + d2) / 2;                 // Centre distance
-  const lead = Math.PI * m * z1;            // Lead (axial advance per rev)
-  const gamma = Math.atan(z1 / q);          // Lead angle (rad)
+  const d1 = q * m;
+  const d2 = m * z2;
+  const a  = (d1 + d2) / 2;
+  const lead = Math.PI * m * z1;
+  const gamma = Math.atan(z1 / q);
   const gammaDeg = gamma * 180 / Math.PI;
 
-  // Tip / root
   const da1 = d1 + 2 * m;
   const df1 = d1 - 2.5 * m;
   const da2 = d2 + 2 * m;
   const df2 = d2 - 2.5 * m;
-  const dt2 = d2 + 2 * m;                   // throat = da2 for standard
+  const dt2 = d2 + 2 * m;
 
-  // Speed
   const ratio = z2 / z1;
   const n2 = n1 / ratio;
-
-  // Sliding velocity
   const vs = (Math.PI * d1 * n1) / (60000 * Math.cos(gamma));
 
-  // Efficiency
   const phi = Math.atan(mu);
   const phiDeg = phi * 180 / Math.PI;
   const eta = Math.tan(gamma) / Math.tan(gamma + phi);
   const selfLocking = gamma <= phi;
 
-  // Output torque & power
   const T2 = T1 * ratio * eta;
-  const P2 = T2 * n2 * Math.PI / 30 / 1000; // kW
+  const P2 = T2 * n2 * Math.PI / 30 / 1000;
 
-  // Populate
   setResult('r-ratio', ratio, 2);
   setResult('r-d1',    d1, 3);
   setResult('r-d2',    d2, 3);
   setResult('r-a',     a, 3);
   setResult('r-lead',  lead, 3);
   setResult('r-gamma', gammaDeg, 3);
-
   setResult('r-da1', da1, 3);
   setResult('r-df1', df1, 3);
   setResult('r-da2', da2, 3);
   setResult('r-df2', df2, 3);
   setResult('r-dt2', dt2, 3);
-
   setResult('r-vs',  vs, 3);
   setResult('r-phi', phiDeg, 3);
   setResult('r-eta', (eta * 100), 1);
-  document.getElementById('r-sl').textContent = selfLocking
-    ? '✓ Self-locking' : '✗ Not self-locking';
+  document.getElementById('r-sl').textContent = selfLocking ? '\u2713 Self-locking' : '\u2717 Not self-locking';
   document.getElementById('r-sl').style.color = selfLocking ? 'var(--neon)' : '#f8a100';
   setResult('r-n2', n2, 1);
   setResult('r-t2', T2, 2);
@@ -257,10 +243,7 @@ function clearCalc() {
   const ids = ['r-ratio','r-d1','r-d2','r-a','r-lead','r-gamma',
     'r-da1','r-df1','r-da2','r-df2','r-dt2',
     'r-vs','r-phi','r-eta','r-sl','r-n2','r-t2','r-p2'];
-  ids.forEach(id => {
-    const el = document.getElementById(id);
-    if (el) { el.textContent = '—'; el.style.color = ''; }
-  });
+  ids.forEach(id => { const el = document.getElementById(id); if (el) { el.textContent = '\u2014'; el.style.color = ''; } });
 }
 
 document.getElementById('btn-calc').addEventListener('click', () => calc(true));

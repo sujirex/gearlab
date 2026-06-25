@@ -95,6 +95,7 @@
           </select>
         </div>
         <button class="btn-calc" id="btn-calc">Calculate Service Factor</button>
+        <button class="btn-calc" id="btn-clear" style="background:var(--bg-card);color:var(--text-muted);border:1px solid var(--border);margin-top:6px">Clear Results</button>
       </div>
 
       <!-- AGMA Ko table -->
@@ -240,7 +241,7 @@ function getGearboxClass(SF, Preq) {
   return {cls:'Extra Heavy Duty', desc:'Special-purpose or reinforced gearbox needed. Consult manufacturer for crusher, ball mill, etc.', color:'#f97316'};
 }
 
-function calc() {
+function calc(showToast = false) {
   const P      = parseFloat(document.getElementById('inp-power').value);
   const rpm    = parseFloat(document.getElementById('inp-rpm').value);
   const hours  = document.getElementById('inp-hours').value;
@@ -281,10 +282,10 @@ function calc() {
       &nbsp;&nbsp;&bull;&nbsp; Service Factor: <strong>fn = ${SF.toFixed(2)}</strong>
     </div>`;
 
-  toast('Service factor calculated');
+  if (showToast) toast('Service factor calculated');
 }
 
-document.getElementById('btn-calc').addEventListener('click', calc);
+document.getElementById('btn-calc').addEventListener('click', () => calc(true));
 ['inp-power','inp-rpm','inp-starts','inp-env'].forEach(id => {
   const el = document.getElementById(id);
   if (el) el.addEventListener('input', calc);
@@ -294,6 +295,19 @@ document.getElementById('btn-calc').addEventListener('click', calc);
   if (el) el.addEventListener('change', calc);
 });
 
+
+function clearCalc() {
+  ['inp-power','inp-rpm'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  ['r-Ko','r-Kh','r-Kn','r-Ke','r-SF','r-P','r-Preq','r-Treq'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = '—';
+  });
+  document.getElementById('rec-card').style.display = 'none';
+}
+document.getElementById('btn-clear').addEventListener('click', clearCalc);
 calc();
 </script>
 </body>

@@ -81,6 +81,7 @@
           </div>
         </div>
         <button class="btn-calc" id="btn-calc">Calculate</button>
+        <button class="btn-calc" id="btn-clear" style="background:var(--bg-card);color:var(--text-muted);border:1px solid var(--border);margin-top:6px">Clear Results</button>
       </div>
 
       <!-- Helix angle guide -->
@@ -251,7 +252,7 @@ const toR = d => d * Math.PI / 180;
 const r3 = v => Math.round(v * 1000) / 1000;
 const r2 = v => Math.round(v * 100) / 100;
 
-function calc() {
+function calc(showToast = false) {
   const mn    = parseFloat(document.getElementById('inp-mn').value);
   const beta  = parseFloat(document.getElementById('inp-beta').value);
   const alphaN = parseFloat(document.getElementById('inp-alpha').value);
@@ -321,14 +322,33 @@ function calc() {
   set('r-ea', ea, 3); set('r-eb', eb, 3); set('r-eg', eg, 3);
   set('r-v',  v,  3);
 
-  toast('Calculated successfully');
+  if (showToast) toast('Calculated successfully');
 }
 
-document.getElementById('btn-calc').addEventListener('click', calc);
+document.getElementById('btn-calc').addEventListener('click', () => calc(true));
 ['inp-mn','inp-beta','inp-alpha','inp-z1','inp-z2','inp-b','inp-rpm'].forEach(id => {
   const el = document.getElementById(id);
   if (el) el.addEventListener('input', calc);
 });
+
+
+function clearCalc() {
+  document.getElementById('inp-mn').value = '2';
+  document.getElementById('inp-beta').value = '15';
+  document.getElementById('inp-alpha').value = '20';
+  document.getElementById('inp-z1').value = '';
+  document.getElementById('inp-z2').value = '';
+  document.getElementById('inp-b').value = '';
+  document.getElementById('inp-rpm').value = '';
+  ['r-mt','r-alphat','r-pt','r-pn','r-px','r-a',
+   'r-d1','r-da1','r-df1','r-db1','r-L1','r-zv1',
+   'r-d2','r-da2','r-df2','r-db2','r-L2','r-zv2',
+   'r-i','r-n2','r-ea','r-eb','r-eg','r-v'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = '—';
+  });
+}
+document.getElementById('btn-clear').addEventListener('click', clearCalc);
 
 // Auto-calculate on load
 calc();

@@ -9,10 +9,12 @@
 <script src="js/common.js"></script>
 <script>buildNav('unit-conv');</script>
 <div class="main-content">
-  <div class="page-header"><div>
+  <div class="page-header" style="align-items:center"><div>
     <div class="page-title">Engineering Unit Converter</div>
     <div class="page-sub">Type in any field — all units update instantly</div>
-  </div></div>
+  </div>
+  <button class="btn-calc" onclick="clearAllUnits()" style="background:var(--bg-card);color:var(--text-muted);border:1px solid var(--border);white-space:nowrap">Clear All</button>
+  </div>
 
   <div class="grid-2">
     <!-- Power -->
@@ -167,5 +169,9 @@ function convStress(from) {
   if(from==='kgcm') mpa=v*0.0980665;
   setFields({'s-mpa':mpa,'s-gpa':mpa/1000,'s-bar':mpa/0.1,'s-psi':mpa/0.00689476,'s-ksi':mpa/6.89476,'s-kgcm':mpa/0.0980665});
 }
+function clearAllUnits() {
+  document.querySelectorAll('input[type=number]').forEach(el => el.value = '');
+}
+
 </script>
 </body></html>

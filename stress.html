@@ -111,6 +111,7 @@
           </div>
         </div>
         <button class="btn-calc" id="btn-calc">Analyse Stress</button>
+        <button class="btn-calc" id="btn-clear" style="background:var(--bg-card);color:var(--text-muted);border:1px solid var(--border);margin-top:6px">Clear Results</button>
       </div>
     </div>
 
@@ -286,7 +287,7 @@ const MATERIALS = {
   alloy:  [300, 1200, '20MnCr5 Case Hardened']
 };
 
-function calc() {
+function calc(showToast = false) {
   const m    = parseFloat(document.getElementById('inp-module').value);
   const z1   = parseInt(document.getElementById('inp-z1').value);
   const z2   = parseInt(document.getElementById('inp-z2').value);
@@ -379,16 +380,36 @@ function calc() {
     content.innerHTML = '<div style="color:#ef4444;font-weight:700;font-size:15px">&#10007; Design needs revision</div><div style="font-size:12px;color:var(--text-muted);margin-top:4px">' + issues.join(' &nbsp;&bull;&nbsp; ') + '</div><div style="font-size:11px;color:var(--text-muted);margin-top:4px">Try: increase module, face width, teeth count, or upgrade material</div>';
   }
 
-  toast('Stress analysis complete');
+  if (showToast) toast('Stress analysis complete');
 }
 
-document.getElementById('btn-calc').addEventListener('click', calc);
+document.getElementById('btn-calc').addEventListener('click', () => calc(true));
 ['inp-module','inp-z1','inp-z2','inp-b','inp-alpha','inp-power','inp-rpm','inp-kv','inp-ka','inp-mat1','inp-mat2'].forEach(id => {
   const el = document.getElementById(id);
   if (el) el.addEventListener('input', calc);
   if (el && el.tagName === 'SELECT') el.addEventListener('change', calc);
 });
 
+
+function clearCalc() {
+  ['inp-z1','inp-z2','inp-b','inp-power','inp-rpm','inp-kv','inp-ka'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  ['r-T1','r-Ft','r-Fr','r-Fn','r-Wt','r-v',
+   'r-Y1','r-sb1','r-sbp1','r-sf1',
+   'r-Y2','r-sb2','r-sbp2','r-sf2',
+   'r-sh','r-shp1','r-shp2','r-shs1','r-shs2'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = '—';
+  });
+  ['r-sf1-item','r-sf2-item','r-sh1-item','r-sh2-item'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('sf-ok','sf-warn','sf-fail');
+  });
+  document.getElementById('status-banner').style.display = 'none';
+}
+document.getElementById('btn-clear').addEventListener('click', clearCalc);
 calc();
 </script>
 

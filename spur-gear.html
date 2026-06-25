@@ -74,7 +74,8 @@
             <div class="field-unit">RPM</div>
           </div>
         </div>
-        <button class="btn-calc" onclick="calculate()">Calculate All Dimensions</button>
+        <button class="btn-calc" onclick="calculate()">Calculate</button>
+        <button class="btn-calc" onclick="clearCalc()" style="background:var(--bg-card);color:var(--text-muted);border:1px solid var(--border);margin-top:6px">Clear Results</button>
       </div>
 
       <!-- Formula reference -->
@@ -258,6 +259,22 @@ function updateDiagram(d1, da1, df1, d2, da2, df2, a) {
   set('dg-df2', 'cx', x2); set('dg-df2', 'cy', y); set('dg-df2', 'r', rf2);
   set('dg-label1', 'x', x1); set('dg-label1', 'y', y+3);
   set('dg-label2', 'x', x2); set('dg-label2', 'y', y+3);
+}
+
+
+function clearCalc() {
+  document.getElementById('inp-z1').value = '';
+  document.getElementById('inp-z2').value = '';
+  document.getElementById('inp-b').value = '';
+  document.getElementById('inp-n1').value = '';
+  ['res-ratio','res-n2','res-a','res-cr',
+   'res-d1','res-da1','res-df1','res-db1',
+   'res-d2','res-da2','res-df2','res-db2',
+   'res-ha','res-hf','res-h','res-p','res-c'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = '—';
+  });
+  document.getElementById('res-b').textContent = '—';
 }
 
 // Auto-calculate on load and on any input change

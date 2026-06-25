@@ -38,6 +38,7 @@
           <div class="field-group"><div class="field-label">Stage Efficiency</div>
             <div class="field-row"><input type="number" id="s-eff" value="98.5" min="50" max="100" step="0.1"/><div class="field-unit">%</div></div></div>
           <button class="btn-calc" onclick="calcSingle()">Calculate</button>
+          <button class="btn-calc" onclick="clearAll()" style="background:var(--bg-card);color:var(--text-muted);border:1px solid var(--border);margin-top:6px">Clear All</button>
         </div>
         <div class="formula-card mt-16">
           <h4>Single Stage Formulas</h4>
@@ -253,5 +254,26 @@ function calcPlanetary() {
 }));
 
 calcSingle();
+function clearAll() {
+  // Clear all number inputs
+  document.querySelectorAll('#mode-single input, #mode-multi input, #mode-planetary input[type=number]')
+    .forEach(el => el.value = '');
+  // Reset read-only Zr display
+  const zr = document.getElementById('p-zr');
+  if (zr) zr.value = '';
+  // Clear all result spans
+  document.querySelectorAll('.result-value, .result-unit').forEach(el => {
+    if (el.classList.contains('result-value')) el.textContent = '—';
+  });
+  // Clear the planetary text result
+  ['s-res-i','s-res-n2','s-res-t2','s-res-p2',
+   'm-res-i1','m-res-n1out','m-res-i2','m-res-n2out','m-res-i3','m-res-n3out',
+   'm-res-itot','m-res-nfinal','m-res-etot','m-res-pout',
+   'p-res-i','p-res-nout','p-res-zs','p-res-zp','p-res-zr','p-res-cfg'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = '—';
+  });
+}
+
 </script>
 </body></html>

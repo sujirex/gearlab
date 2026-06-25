@@ -14,19 +14,40 @@ initTheme();
 
 /* ---- Nav definition ---- */
 const NAV = [
-  { key:'dashboard',     href:'index.html',          icon:'home',    label:'Dashboard' },
-  { key:'spur-gear',     href:'spur-gear.html',       icon:'gear',    label:'Spur Gear',       section:'Gear Geometry' },
-  { key:'helical-gear',  href:'helical-gear.html',    icon:'helical', label:'Helical Gear' },
-  { key:'bevel-gear',    href:'bevel-gear.html',      icon:'bevel',   label:'Bevel Gear' },
-  { key:'worm-gear',     href:'worm-gear.html',       icon:'worm',    label:'Worm Gear' },
-  { key:'rack-pinion',   href:'rack-pinion.html',     icon:'rack',    label:'Rack & Pinion' },
-  { key:'profile-shift', href:'profile-shift.html',   icon:'shift',   label:'Profile Shift' },
-  { key:'power-torque',  href:'power-torque.html',    icon:'power',   label:'Power & Torque',  section:'Power & Drive' },
-  { key:'gear-ratio',    href:'gear-ratio.html',      icon:'ratio',   label:'Gear Ratio' },
-  { key:'stress',        href:'stress.html',          icon:'stress',  label:'Stress Analysis', section:'Design & Analysis' },
-  { key:'service',       href:'service-factor.html',  icon:'factor',  label:'Service Factor' },
-  { key:'unit-conv',     href:'unit-converter.html',  icon:'convert', label:'Unit Converter',  section:'Tools' },
-  { key:'guide',         href:'guide.html',           icon:'guide',   label:'Guide' },
+  { key:'dashboard',        href:'index.html',            icon:'home',    label:'Dashboard' },
+  // Gear Geometry
+  { key:'spur-gear',        href:'spur-gear.html',         icon:'gear',    label:'Spur Gear',            section:'Gear Geometry' },
+  { key:'helical-gear',     href:'helical-gear.html',      icon:'helical', label:'Helical Gear' },
+  { key:'bevel-gear',       href:'bevel-gear.html',        icon:'bevel',   label:'Bevel Gear' },
+  { key:'worm-gear',        href:'worm-gear.html',         icon:'worm',    label:'Worm Gear' },
+  { key:'rack-pinion',      href:'rack-pinion.html',       icon:'rack',    label:'Rack & Pinion' },
+  { key:'profile-shift',    href:'profile-shift.html',     icon:'shift',   label:'Profile Shift' },
+  // Power & Drive
+  { key:'power-torque',     href:'power-torque.html',      icon:'power',   label:'Power & Torque',       section:'Power & Drive' },
+  { key:'gear-ratio',       href:'gear-ratio.html',        icon:'ratio',   label:'Gear Ratio' },
+  // Design & Analysis
+  { key:'stress',           href:'stress.html',            icon:'stress',  label:'Stress Analysis',      section:'Design & Analysis' },
+  { key:'service',          href:'service-factor.html',    icon:'factor',  label:'Service Factor' },
+  // Lubrication
+  { key:'oil-viscosity',    href:'#', icon:'oil',     label:'Oil Viscosity',        section:'Lubrication', soon:true },
+  { key:'thermal-rating',   href:'#', icon:'thermo',  label:'Thermal Rating',       soon:true },
+  { key:'oil-volume',       href:'#', icon:'drum',    label:'Oil Volume',           soon:true },
+  { key:'churning-loss',    href:'#', icon:'churn',   label:'Churning Loss',        soon:true },
+  // Bearings
+  { key:'bearing-life',     href:'#', icon:'bearing', label:'Bearing Life L10',     section:'Bearings',    soon:true },
+  { key:'bearing-load',     href:'#', icon:'load',    label:'Bearing Load Analysis',soon:true },
+  { key:'shaft-align',      href:'#', icon:'align',   label:'Shaft Alignment',      soon:true },
+  // Shafts & Keys
+  { key:'shaft-design',     href:'#', icon:'shaft',   label:'Shaft Design',         section:'Shafts & Keys',soon:true },
+  { key:'critical-speed',   href:'#', icon:'vibrate', label:'Critical Speed',       soon:true },
+  { key:'keyway-stress',    href:'#', icon:'key',     label:'Keyway Stress',        soon:true },
+  { key:'torsional-stiff',  href:'#', icon:'twist',   label:'Torsional Stiffness',  soon:true },
+  // Materials
+  { key:'material-sel',     href:'#', icon:'material',label:'Material Selector',    section:'Materials',   soon:true },
+  { key:'hardness-conv',    href:'#', icon:'hardness',label:'Hardness Converter',   soon:true },
+  // Tools
+  { key:'unit-conv',        href:'unit-converter.html',    icon:'convert', label:'Unit Converter',       section:'Tools' },
+  { key:'guide',            href:'guide.html',             icon:'guide',   label:'Guide' },
 ];
 
 /* ---- SVG Icons ---- */
@@ -47,8 +68,21 @@ function navIcon(type) {
     worm:    '<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M1 10C1 5.6 15 5.6 15 10v1H1v-1zm1 2h12v1c0 1.1-2.7 2-6 2S2 14.1 2 13v-1z"/></svg>',
     rack:    '<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><rect x="0" y="10" width="16" height="4" rx="1"/><rect x="1" y="7" width="2" height="3"/><rect x="5" y="6" width="2" height="4"/><rect x="9" y="7" width="2" height="3"/><rect x="13" y="6" width="2" height="4"/></svg>',
     shift:   '<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M5 14V8H2l6-7 6 7h-3v6H5z"/><rect x="1" y="14" width="14" height="2" rx="1"/></svg>',
+    oil:     '<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1l3 5H5L8 1zm-5 6h10l1 7H2L3 7z"/></svg>',
+    thermo:  '<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><rect x="6" y="1" width="4" height="8" rx="2"/><circle cx="8" cy="12" r="3"/><rect x="7" y="5" width="2" height="5"/></svg>',
+    drum:    '<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><ellipse cx="8" cy="4" rx="6" ry="2"/><rect x="2" y="4" width="12" height="8"/><ellipse cx="8" cy="12" rx="6" ry="2"/></svg>',
+    churn:   '<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 2a6 6 0 100 12A6 6 0 008 2zm0 2a4 4 0 110 8 4 4 0 010-8z"/><path d="M8 5v3l2 2"/></svg>',
+    bearing: '<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="8" r="7" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="8" cy="8" r="3" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="8" cy="2" r="1.2"/><circle cx="8" cy="14" r="1.2"/><circle cx="2" cy="8" r="1.2"/><circle cx="14" cy="8" r="1.2"/></svg>',
+    load:    '<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3 12h10M8 4v8M5 7l3-3 3 3"/></svg>',
+    align:   '<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="7" width="14" height="2" rx="1"/><circle cx="4" cy="8" r="2.5" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="8" r="2.5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>',
+    shaft:   '<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><rect x="0" y="6" width="16" height="4" rx="2"/><rect x="1" y="4" width="4" height="8" rx="1"/><rect x="11" y="4" width="4" height="8" rx="1"/></svg>',
+    vibrate: '<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M1 8h2M13 8h2M3 4l2 4-2 4M13 4l-2 4 2 4M6 2l2 12M8 2l2 12" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>',
+    key:     '<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><circle cx="5" cy="7" r="4" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 9l6 5M11 11l1 2"/></svg>',
+    twist:   '<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M2 5C2 5 4 3 8 3s6 2 6 2M2 11C2 11 4 13 8 13s6-2 6-2M5 3v10M11 3v10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>',
+    material:'<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="1" width="6" height="6" rx="1"/><rect x="9" y="1" width="6" height="6" rx="1" opacity=".6"/><rect x="1" y="9" width="6" height="6" rx="1" opacity=".6"/><rect x="9" y="9" width="6" height="6" rx="1" opacity=".3"/></svg>',
+    hardness:'<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><polygon points="8,1 15,13 1,13"/><circle cx="8" cy="10" r="2"/></svg>',
   };
-  return icons[type] || '';
+  return icons[type] || '<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>';
 }
 
 /* ---- Gear logo SVG (8-tooth gear on teal bg) ---- */

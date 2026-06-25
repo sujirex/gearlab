@@ -108,7 +108,7 @@ input[type="number"]::-webkit-inner-spin-button { opacity: .5; }
   padding: 16px 16px 6px;
   font-size: 9px; font-weight: 800;
   text-transform: uppercase; letter-spacing: 1px;
-  color: rgba(255,255,255,.25);
+  color: #D4920A;
 }
 .nav-item {
   display: flex; align-items: center; gap: 9px;
@@ -363,7 +363,7 @@ select { cursor: pointer; }
 /* Module section title (groups on dashboard) */
 .module-section-title {
   font-size: 11px; font-weight: 700; letter-spacing: .08em;
-  text-transform: uppercase; color: var(--primary); opacity: .75;
+  text-transform: uppercase; color: #D4920A;
   margin: 28px 0 10px; padding-left: 2px;
 }
 
@@ -389,6 +389,14 @@ select { cursor: pointer; }
 }
 .module-name { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
 .module-desc { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+.card-soon-badge {
+  display: inline-block; font-size: 9px; font-weight: 700;
+  letter-spacing: .06em; text-transform: uppercase;
+  background: rgba(212,146,10,.15); color: #D4920A;
+  border: 1px solid rgba(212,146,10,.35);
+  border-radius: 4px; padding: 1px 5px; margin-left: 6px;
+  vertical-align: middle; line-height: 1.6;
+}
 .module-badge {
   display: inline-block; margin-top: 8px;
   font-size: 9px; font-weight: 700; text-transform: uppercase;

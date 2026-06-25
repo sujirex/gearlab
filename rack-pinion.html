@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Rack &amp; Pinion Calculator — GearLab</title>
+<link rel="icon" href="favicon.svg"/>
+<link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+<script src="js/common.js"></script>
+<script>buildNav('rack-pinion');</script>
+<div class="main-content">
+
+  <div class="page-header">
+    <div>
+      <div class="page-title">Rack &amp; Pinion Calculator</div>
+      <div class="page-sub">Linear travel, speed, force conversion and rack tooth geometry</div>
+    </div>
+    <div class="page-header-actions">
+      <button class="btn-secondary" onclick="clearCalc()">Clear</button>
+      <button class="btn-primary" id="btn-calc" onclick="calc(true)">Calculate</button>
+    </div>
+  </div>
+
+  <div class="calc-layout">
+    <!-- Inputs -->
+    <div class="calc-inputs">
+      <div class="card">
+        <div class="card-header">Pinion &amp; Rack Parameters</div>
+        <div class="card-body">
+
+          <div class="input-row">
+            <label class="input-label">Module <span class="input-unit">m</span></label>
+            <input type="number" id="inp-m" class="input-field" placeholder="2" min="0.1" step="0.5" value="2"/>
+          </div>
+          <div class="input-row">
+            <label class="input-label">Pinion Teeth <span class="input-unit">z</span></label>
+            <input type="number" id="inp-z" class="input-field" placeholder="20" min="6" step="1" value="20"/>
+          </div>
+          <div class="input-row">
+            <label class="input-label">Pressure Angle <span class="input-unit">α °</span></label>
+            <input type="number" id="inp-alpha" class="input-field" placeholder="20" min="14.5" max="25" step="0.5" value="20"/>
+          </div>
+          <div class="input-row">
+            <label class="input-label">Face Width <span class="input-unit">b mm</span></label>
+            <input type="number" id="inp-b" class="input-field" placeholder="20" min="1" step="1" value="20"/>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="card mt-16">
+        <div class="card-header">Operating Conditions</div>
+        <div class="card-body">
+
+          <div class="input-row">
+            <label class="input-label">Pinion Speed <span class="input-unit">n RPM</span></label>
+            <input type="number" id="inp-n" class="input-field" placeholder="100" min="0.1" step="1" value="100"/>
+          </div>
+          <div class="input-row">
+            <label class="input-label">Input Torque <span class="input-unit">T N·m</span></label>
+            <input type="number" id="inp-T" class="input-field" placeholder="20" min="0" step="0.5" value="20"/>
+          </div>
+          <div class="input-row">
+            <label class="input-label">Required Stroke <span class="input-unit">L mm</span></label>
+            <input type="number" id="inp-L" class="input-field" placeholder="500" min="0" step="10" value="500"/>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="tip-box mt-16">
+        <strong>Linear travel per revolution</strong> = π × PCD. Increasing pinion teeth or module increases travel and force capacity.
+      </div>
+    </div>
+
+    <!-- Results -->
+    <div class="calc-results">
+
+      <!-- Pinion Geometry -->
+      <div class="card">
+        <div class="card-header">Pinion Geometry</div>
+        <div class="card-body result-grid">
+          <div class="result-item">
+            <div class="result-label">Pitch Circle Diameter <em>d</em></div>
+            <div class="result-value"><span id="r-d">—</span> <span class="result-unit">mm</span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Tip Diameter <em>da</em></div>
+            <div class="result-value"><span id="r-da">—</span> <span class="result-unit">mm</span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Root Diameter <em>df</em></div>
+            <div class="result-value"><span id="r-df">—</span> <span class="result-unit">mm</span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Base Circle Diameter <em>db</em></div>
+            <div class="result-value"><span id="r-db">—</span> <span class="result-unit">mm</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Rack Geometry -->
+      <div class="card mt-16">
+        <div class="card-header">Rack Geometry</div>
+        <div class="card-body result-grid">
+          <div class="result-item">
+            <div class="result-label">Circular Pitch <em>p</em></div>
+            <div class="result-value"><span id="r-p">—</span> <span class="result-unit">mm</span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Addendum (rack) <em>ha</em></div>
+            <div class="result-value"><span id="r-ha">—</span> <span class="result-unit">mm</span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Dedendum (rack) <em>hf</em></div>
+            <div class="result-value"><span id="r-hf">—</span> <span class="result-unit">mm</span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Whole Depth <em>h</em></div>
+            <div class="result-value"><span id="r-h">—</span> <span class="result-unit">mm</span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Tooth Thickness (at PL) <em>s</em></div>
+            <div class="result-value"><span id="r-s">—</span> <span class="result-unit">mm</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Linear Motion -->
+      <div class="card mt-16">
+        <div class="card-header">Linear Motion</div>
+        <div class="card-body result-grid">
+          <div class="result-item">
+            <div class="result-label">Travel per Revolution</div>
+            <div class="result-value"><span id="r-tpr">—</span> <span class="result-unit">mm/rev</span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Linear Speed <em>v</em></div>
+            <div class="result-value"><span id="r-v">—</span> <span class="result-unit">mm/s</span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Linear Speed</div>
+            <div class="result-value"><span id="r-vm">—</span> <span class="result-unit">m/min</span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Tangential Force <em>Ft</em></div>
+            <div class="result-value"><span id="r-Ft">—</span> <span class="result-unit">N</span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Rack Normal Force <em>Fn</em></div>
+            <div class="result-value"><span id="r-Fn">—</span> <span class="result-unit">N</span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Revs for Stroke <em>N</em></div>
+            <div class="result-value"><span id="r-N">—</span> <span class="result-unit">rev</span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Stroke Time</div>
+            <div class="result-value"><span id="r-t">—</span> <span class="result-unit">s</span></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+const inputIds = ['inp-m','inp-z','inp-alpha','inp-b','inp-n','inp-T','inp-L'];
+inputIds.forEach(id => document.getElementById(id).addEventListener('input', () => calc(false)));
+
+function calc(showToast = false) {
+  const m     = parseFloat(document.getElementById('inp-m').value);
+  const z     = parseFloat(document.getElementById('inp-z').value);
+  const alpha = parseFloat(document.getElementById('inp-alpha').value) * Math.PI / 180;
+  const b     = parseFloat(document.getElementById('inp-b').value);
+  const n     = parseFloat(document.getElementById('inp-n').value);
+  const T     = parseFloat(document.getElementById('inp-T').value);
+  const L     = parseFloat(document.getElementById('inp-L').value);
+
+  if ([m, z, alpha, b, n].some(v => isNaN(v) || v <= 0)) return;
+
+  // Pinion geometry
+  const d  = m * z;
+  const da = d + 2 * m;
+  const df = d - 2.5 * m;
+  const db = d * Math.cos(alpha);
+
+  // Rack geometry
+  const p  = Math.PI * m;
+  const ha = m;
+  const hf = 1.25 * m;
+  const h  = 2.25 * m;
+  const s  = p / 2;                   // tooth thickness at pitch line
+
+  // Linear motion
+  const tpr = Math.PI * d;            // travel per revolution (mm)
+  const v   = tpr * n / 60;           // linear speed (mm/s)
+  const vm  = v * 60 / 1000;          // m/min
+
+  // Force
+  const Ft = isNaN(T) || T <= 0 ? null : 2000 * T / d;   // N (T in N·m, d in mm)
+  const Fn = Ft !== null ? Ft / Math.cos(alpha) : null;
+
+  // Stroke
+  const N_rev = isNaN(L) || L <= 0 ? null : L / tpr;
+  const t_s   = N_rev !== null ? N_rev / (n / 60) : null;
+
+  // Populate
+  setResult('r-d',  d, 3);
+  setResult('r-da', da, 3);
+  setResult('r-df', df, 3);
+  setResult('r-db', db, 3);
+
+  setResult('r-p',  p, 3);
+  setResult('r-ha', ha, 3);
+  setResult('r-hf', hf, 3);
+  setResult('r-h',  h, 3);
+  setResult('r-s',  s, 3);
+
+  setResult('r-tpr', tpr, 3);
+  setResult('r-v',   v, 2);
+  setResult('r-vm',  vm, 3);
+  setResult('r-Ft',  Ft, 1);
+  setResult('r-Fn',  Fn, 1);
+  setResult('r-N',   N_rev, 2);
+  setResult('r-t',   t_s, 2);
+
+  if (showToast) toast('Rack & pinion calculated');
+}
+
+function clearCalc() {
+  document.getElementById('inp-n').value = '';
+  document.getElementById('inp-T').value = '';
+  document.getElementById('inp-L').value = '';
+  const ids = ['r-d','r-da','r-df','r-db','r-p','r-ha','r-hf','r-h','r-s',
+    'r-tpr','r-v','r-vm','r-Ft','r-Fn','r-N','r-t'];
+  ids.forEach(id => { const el = document.getElementById(id); if (el) el.textContent = '—'; });
+}
+
+document.getElementById('btn-calc').addEventListener('click', () => calc(true));
+calc(false);
+</script>
+</body></html>

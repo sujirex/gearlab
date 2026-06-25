@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Profile Shift Calculator — GearLab</title>
+<link rel="icon" href="favicon.svg"/>
+<link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+<script src="js/common.js"></script>
+<script>buildNav('profile-shift');</script>
+<div class="main-content">
+
+  <div class="page-header">
+    <div>
+      <div class="page-title">Profile Shift (Addendum Modification)</div>
+      <div class="page-sub">x-coefficients → modified center distance, working pressure angle, tip/root diameters, contact ratio</div>
+    </div>
+    <div class="page-header-actions">
+      <button class="btn-secondary" onclick="clearCalc()">Clear</button>
+      <button class="btn-primary" id="btn-calc" onclick="calc(true)">Calculate</button>
+    </div>
+  </div>
+
+  <div class="calc-layout">
+    <!-- Inputs -->
+    <div class="calc-inputs">
+      <div class="card">
+        <div class="card-header">Gear Parameters</div>
+        <div class="card-body">
+
+          <div class="input-row">
+            <label class="input-label">Module <span class="input-unit">m</span></label>
+            <input type="number" id="inp-m" class="input-field" placeholder="2" min="0.1" step="0.5" value="2"/>
+          </div>
+          <div class="input-row">
+            <label class="input-label">Pinion Teeth <span class="input-unit">z₁</span></label>
+            <input type="number" id="inp-z1" class="input-field" placeholder="17" min="4" step="1" value="17"/>
+          </div>
+          <div class="input-row">
+            <label class="input-label">Gear Teeth <span class="input-unit">z₂</span></label>
+            <input type="number" id="inp-z2" class="input-field" placeholder="34" min="4" step="1" value="34"/>
+          </div>
+          <div class="input-row">
+            <label class="input-label">Pressure Angle <span class="input-unit">α °</span></label>
+            <input type="number" id="inp-alpha" class="input-field" placeholder="20" min="14.5" max="25" step="0.5" value="20"/>
+          </div>
+          <div class="input-row">
+            <label class="input-label">Face Width <span class="input-unit">b mm</span></label>
+            <input type="number" id="inp-b" class="input-field" placeholder="20" min="1" step="1" value="20"/>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="card mt-16">
+        <div class="card-header">Profile Shift Coefficients</div>
+        <div class="card-body">
+
+          <div class="input-row">
+            <label class="input-label">Pinion Shift <span class="input-unit">x₁</span></label>
+            <input type="number" id="inp-x1" class="input-field" placeholder="0.3" min="-1" max="1.5" step="0.05" value="0.3"/>
+          </div>
+          <div class="input-row">
+            <label class="input-label">Gear Shift <span class="input-unit">x₂</span></label>
+            <input type="number" id="inp-x2" class="input-field" placeholder="0.1" min="-1" max="1.5" step="0.05" value="0.1"/>
+          </div>
+
+          <!-- Undercut warnings (filled by JS) -->
+          <div id="warn-x1" class="warn-box" style="display:none;margin-top:8px;"></div>
+          <div id="warn-x2" class="warn-box" style="display:none;margin-top:8px;"></div>
+
+        </div>
+      </div>
+
+      <div class="tip-box mt-16">
+        <strong>Positive shift</strong> (x &gt; 0) strengthens the tooth and avoids undercut. Standard gears use x = 0. Minimum to avoid undercut at 20°: x_min = (17 − z) / 17.
+      </div>
+    </div>
+
+    <!-- Results -->
+    <div class="calc-results">
+
+      <!-- Undercut check -->
+      <div class="card">
+        <div class="card-header">Undercut Check</div>
+        <div class="card-body result-grid">
+          <div class="result-item">
+            <div class="result-label">Min Shift Pinion <em>x₁_min</em></div>
+            <div class="result-value"><span id="r-x1min">—</span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Min Shift Gear <em>x₂_min</em></div>
+            <div class="result-value"><span id="r-x2min">—</span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Sum of Coefficients <em>x∑</em></div>
+            <div class="result-value"><span id="r-xsum">—</span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Pinion Undercut</div>
+            <div class="result-value"><span id="r-uc1">—</span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Gear Undercut</div>
+            <div class="result-value"><span id="r-uc2">—</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modified Geometry -->
+      <div class="card mt-16">
+        <div class="card-header">Modified Gear Pair</div>
+        <div class="card-body result-grid">
+          <div class="result-item">
+            <div class="result-label">Standard Centre Distance <em>a</em></div>
+            <div class="result-value"><span id="r-a">—</span> <span class="result-unit">mm</span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Working Pressure Angle <em>αw</em></div>
+            <div class="result-value"><span id="r-alphaw">—</span> <span class="result-unit">°</span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Modified Centre Distance <em>a'</em></div>
+            <div class="result-value"><span id="r-aw">—</span> <span class="result-unit">mm</span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Centre Distance Increment <em>Δa</em></div>
+            <div class="result-value"><span id="r-da-inc">—</span> <span class="result-unit">mm</span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Working PCD (Pinion) <em>dw₁</em></div>
+            <div class="result-value"><span id="r-dw1">—</span> <span class="result-unit">mm</span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Working PCD (Gear) <em>dw₂</em></div>
+            <div class="result-value"><span id="r-dw2">—</span> <span class="result-unit">mm</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Diameters -->
+      <div class="card mt-16">
+        <div class="card-header">Modified Diameters</div>
+        <div class="card-body result-grid">
+          <div class="result-item">
+            <div class="result-label">Pinion Tip Dia <em>da₁</em></div>
+            <div class="result-value"><span id="r-da1">—</span> <span class="result-unit">mm</span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Gear Tip Dia <em>da₂</em></div>
+            <div class="result-value"><span id="r-da2">—</span> <span class="result-unit">mm</span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Pinion Root Dia <em>df₁</em></div>
+            <div class="result-value"><span id="r-df1">—</span> <span class="result-unit">mm</span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Gear Root Dia <em>df₂</em></div>
+            <div class="result-value"><span id="r-df2">—</span> <span class="result-unit">mm</span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Base Circle Dia (Pinion) <em>db₁</em></div>
+            <div class="result-value"><span id="r-db1">—</span> <span class="result-unit">mm</span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Base Circle Dia (Gear) <em>db₂</em></div>
+            <div class="result-value"><span id="r-db2">—</span> <span class="result-unit">mm</span></div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Contact Ratio <em>εα</em></div>
+            <div class="result-value"><span id="r-eps">—</span></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<style>
+.warn-box { padding:8px 12px; border-radius:6px; font-size:12px; color:#f8a100;
+  background:rgba(248,161,0,.1); border:1px solid rgba(248,161,0,.3); }
+</style>
+
+<script>
+const inputIds = ['inp-m','inp-z1','inp-z2','inp-alpha','inp-b','inp-x1','inp-x2'];
+inputIds.forEach(id => document.getElementById(id).addEventListener('input', () => calc(false)));
+
+/* Involute function: inv(α) = tan(α) - α  (α in radians) */
+function inv(a) { return Math.tan(a) - a; }
+
+/* Solve for α given inv(α) = target using Newton-Raphson */
+function solveInv(target, guess = 20 * Math.PI / 180) {
+  let a = guess;
+  for (let i = 0; i < 50; i++) {
+    const f  = inv(a) - target;
+    const fp = Math.tan(a) * Math.tan(a);   // d/da[tan(a) - a] = sec²(a) - 1 = tan²(a)
+    const da = f / fp;
+    a -= da;
+    if (Math.abs(da) < 1e-10) break;
+  }
+  return a;
+}
+
+function calc(showToast = false) {
+  const m     = parseFloat(document.getElementById('inp-m').value);
+  const z1    = parseFloat(document.getElementById('inp-z1').value);
+  const z2    = parseFloat(document.getElementById('inp-z2').value);
+  const alpha = parseFloat(document.getElementById('inp-alpha').value) * Math.PI / 180;
+  const b     = parseFloat(document.getElementById('inp-b').value);
+  const x1    = parseFloat(document.getElementById('inp-x1').value);
+  const x2    = parseFloat(document.getElementById('inp-x2').value);
+
+  if ([m, z1, z2, alpha, b].some(v => isNaN(v) || v <= 0)) return;
+  if (isNaN(x1) || isNaN(x2)) return;
+
+  // ---- Undercut minimum (for 20° — proportional for other angles)
+  const x1min = (1 - z1 * Math.pow(Math.sin(alpha), 2)) / 1;  // ISO: x_min = 1 - z·sin²α
+  const x2min = (1 - z2 * Math.pow(Math.sin(alpha), 2)) / 1;
+
+  const uc1 = x1 < x1min;
+  const uc2 = x2 < x2min;
+
+  // Undercut warnings in input section
+  const w1 = document.getElementById('warn-x1');
+  const w2 = document.getElementById('warn-x2');
+  if (uc1) { w1.style.display = ''; w1.textContent = `⚠ Pinion may undercut. Minimum x₁ ≥ ${x1min.toFixed(3)}`; }
+  else { w1.style.display = 'none'; }
+  if (uc2) { w2.style.display = ''; w2.textContent = `⚠ Gear may undercut. Minimum x₂ ≥ ${x2min.toFixed(3)}`; }
+  else { w2.style.display = 'none'; }
+
+  // Reference PCDs (unchanged)
+  const d1 = m * z1;
+  const d2 = m * z2;
+
+  // Base circles (fixed — shift doesn't change base circle)
+  const db1 = d1 * Math.cos(alpha);
+  const db2 = d2 * Math.cos(alpha);
+
+  // Standard centre distance
+  const a_std = m * (z1 + z2) / 2;
+
+  // Sum of shift coefficients
+  const x_sum = x1 + x2;
+
+  // Modified pressure angle via involute function
+  // inv(αw) = inv(α) + 2·tan(α)·x∑ / (z1+z2)
+  const inv_alphaw = inv(alpha) + 2 * Math.tan(alpha) * x_sum / (z1 + z2);
+  const alphaw = solveInv(inv_alphaw, alpha);  // Newton-Raphson solve
+  const alphawDeg = alphaw * 180 / Math.PI;
+
+  // Modified centre distance
+  const a_mod = a_std * Math.cos(alpha) / Math.cos(alphaw);
+  const delta_a = a_mod - a_std;
+
+  // Working pitch diameters
+  const dw1 = d1 * Math.cos(alpha) / Math.cos(alphaw);
+  const dw2 = d2 * Math.cos(alpha) / Math.cos(alphaw);
+
+  // Tip diameters (with shift, no tip relief)
+  const da1 = d1 + 2 * m * (1 + x1);
+  const da2 = d2 + 2 * m * (1 + x2);
+
+  // Root diameters (shift raises root circle)
+  const df1 = d1 - 2 * m * (1.25 - x1);
+  const df2 = d2 - 2 * m * (1.25 - x2);
+
+  // Contact ratio
+  const ra1 = da1 / 2;
+  const ra2 = da2 / 2;
+  const rb1 = db1 / 2;
+  const rb2 = db2 / 2;
+  const eps = (Math.sqrt(ra1*ra1 - rb1*rb1) + Math.sqrt(ra2*ra2 - rb2*rb2) - a_mod * Math.sin(alphaw))
+              / (Math.PI * m * Math.cos(alpha));
+
+  // Populate undercut section
+  setResult('r-x1min', x1min, 3);
+  setResult('r-x2min', x2min, 3);
+  document.getElementById('r-xsum').textContent = x_sum.toFixed(3);
+  const uc1El = document.getElementById('r-uc1');
+  const uc2El = document.getElementById('r-uc2');
+  uc1El.textContent = uc1 ? '⚠ Risk' : '✓ Safe';
+  uc1El.style.color  = uc1 ? '#f8a100' : 'var(--neon)';
+  uc2El.textContent = uc2 ? '⚠ Risk' : '✓ Safe';
+  uc2El.style.color  = uc2 ? '#f8a100' : 'var(--neon)';
+
+  // Modified gear pair
+  setResult('r-a',       a_std, 3);
+  setResult('r-alphaw',  alphawDeg, 3);
+  setResult('r-aw',      a_mod, 3);
+  setResult('r-da-inc',  delta_a, 3);
+  setResult('r-dw1',     dw1, 3);
+  setResult('r-dw2',     dw2, 3);
+
+  // Diameters
+  setResult('r-da1', da1, 3);
+  setResult('r-da2', da2, 3);
+  setResult('r-df1', df1, 3);
+  setResult('r-df2', df2, 3);
+  setResult('r-db1', db1, 3);
+  setResult('r-db2', db2, 3);
+
+  const epsEl = document.getElementById('r-eps');
+  epsEl.textContent = eps.toFixed(3);
+  epsEl.style.color = eps < 1.2 ? '#f8a100' : eps >= 1.4 ? 'var(--neon)' : 'inherit';
+  if (eps < 1.2) {
+    epsEl.textContent += '  ⚠ < 1.2';
+  }
+
+  if (showToast) toast('Profile shift calculated');
+}
+
+function clearCalc() {
+  document.getElementById('inp-x1').value = '';
+  document.getElementById('inp-x2').value = '';
+  const ids = ['r-x1min','r-x2min','r-xsum','r-uc1','r-uc2',
+    'r-a','r-alphaw','r-aw','r-da-inc','r-dw1','r-dw2',
+    'r-da1','r-da2','r-df1','r-df2','r-db1','r-db2','r-eps'];
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.textContent = '—'; el.style.color = ''; }
+  });
+  document.getElementById('warn-x1').style.display = 'none';
+  document.getElementById('warn-x2').style.display = 'none';
+}
+
+document.getElementById('btn-calc').addEventListener('click', () => calc(true));
+calc(false);
+</script>
+</body></html>

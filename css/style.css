@@ -360,8 +360,15 @@ select { cursor: pointer; }
 .quick-result { font-size: 22px; font-weight: 900; color: var(--neon); min-width: 120px; }
 .quick-result-unit { font-size: 11px; color: rgba(255,255,255,.4); margin-left: 4px; }
 
+/* Module section title (groups on dashboard) */
+.module-section-title {
+  font-size: 11px; font-weight: 700; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--primary); opacity: .75;
+  margin: 28px 0 10px; padding-left: 2px;
+}
+
 /* Module cards grid */
-.module-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
+.module-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin-bottom: 8px; }
 .module-card {
   background: var(--bg-card); border: 1px solid var(--border);
   border-radius: 12px; padding: 20px; cursor: pointer;

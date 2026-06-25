@@ -14,15 +14,19 @@ initTheme();
 
 /* ---- Nav definition ---- */
 const NAV = [
-  { key:'dashboard',    href:'index.html',         icon:'home',     label:'Dashboard' },
-  { key:'spur-gear',    href:'spur-gear.html',      icon:'gear',     label:'Spur Gear' },
-  { key:'helical-gear', href:'helical-gear.html',   icon:'helical',  label:'Helical Gear' },
-  { key:'power-torque', href:'power-torque.html',   icon:'power',    label:'Power & Torque' },
-  { key:'gear-ratio',   href:'gear-ratio.html',     icon:'ratio',    label:'Gear Ratio' },
-  { key:'stress',       href:'stress.html',         icon:'stress',   label:'Stress Analysis' },
-  { key:'service',      href:'service-factor.html', icon:'factor',   label:'Service Factor' },
-  { key:'unit-conv',    href:'unit-converter.html', icon:'convert',  label:'Unit Converter' },
-  { key:'guide',        href:'guide.html',          icon:'guide',    label:'Guide' },
+  { key:'dashboard',     href:'index.html',          icon:'home',    label:'Dashboard' },
+  { key:'spur-gear',     href:'spur-gear.html',       icon:'gear',    label:'Spur Gear',       section:'Gear Geometry' },
+  { key:'helical-gear',  href:'helical-gear.html',    icon:'helical', label:'Helical Gear' },
+  { key:'bevel-gear',    href:'bevel-gear.html',      icon:'bevel',   label:'Bevel Gear' },
+  { key:'worm-gear',     href:'worm-gear.html',       icon:'worm',    label:'Worm Gear' },
+  { key:'rack-pinion',   href:'rack-pinion.html',     icon:'rack',    label:'Rack & Pinion' },
+  { key:'profile-shift', href:'profile-shift.html',   icon:'shift',   label:'Profile Shift' },
+  { key:'power-torque',  href:'power-torque.html',    icon:'power',   label:'Power & Torque',  section:'Power & Drive' },
+  { key:'gear-ratio',    href:'gear-ratio.html',      icon:'ratio',   label:'Gear Ratio' },
+  { key:'stress',        href:'stress.html',          icon:'stress',  label:'Stress Analysis', section:'Design & Analysis' },
+  { key:'service',       href:'service-factor.html',  icon:'factor',  label:'Service Factor' },
+  { key:'unit-conv',     href:'unit-converter.html',  icon:'convert', label:'Unit Converter',  section:'Tools' },
+  { key:'guide',         href:'guide.html',           icon:'guide',   label:'Guide' },
 ];
 
 /* ---- SVG Icons ---- */
@@ -39,60 +43,70 @@ function navIcon(type) {
     guide:   '<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3 1h10a1 1 0 011 1v12a1 1 0 01-1 1H3a1 1 0 01-1-1V2a1 1 0 011-1zm1 3v1h8V4H4zm0 3v1h8V7H4zm0 3v1h5v-1H4z"/></svg>',
     moon:    '<svg width="15" height="15" viewBox="0 0 15 15" fill="currentColor"><path d="M2.9 0.5C1.8 2.2 1.2 4.1 1.2 6c0 3.7 2.3 6.9 5.6 8.2.4.2.8-.2.7-.7C6.8 12.1 6.5 10.5 6.5 9c0-4.1 3-7.5 7-7.9.5 0 .7-.6.4-1C12.4.5 11.2 0 10 0 6.7 0 4 1.8 2.9.5z"/></svg>',
     sun:     '<svg width="15" height="15" viewBox="0 0 15 15" fill="currentColor"><circle cx="7.5" cy="7.5" r="3"/><path d="M7.5 1v2M7.5 12v2M1 7.5h2M12 7.5h2M3 3l1.5 1.5M10.5 10.5L12 12M3 12l1.5-1.5M10.5 4.5L12 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>',
+    bevel:   '<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M1 15V7.5L6.5 1H8L6 15H1zm7-11h1.5L15 8v7h-5L8 4z"/></svg>',
+    worm:    '<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M1 10C1 5.6 15 5.6 15 10v1H1v-1zm1 2h12v1c0 1.1-2.7 2-6 2S2 14.1 2 13v-1z"/></svg>',
+    rack:    '<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><rect x="0" y="10" width="16" height="4" rx="1"/><rect x="1" y="7" width="2" height="3"/><rect x="5" y="6" width="2" height="4"/><rect x="9" y="7" width="2" height="3"/><rect x="13" y="6" width="2" height="4"/></svg>',
+    shift:   '<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M5 14V8H2l6-7 6 7h-3v6H5z"/><rect x="1" y="14" width="14" height="2" rx="1"/></svg>',
   };
   return icons[type] || '';
 }
 
-/* ---- Gear logo SVG (8-tooth gear on teal) ---- */
-const GEAR_LOGO_SVG = `<svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="32" height="32" rx="8" fill="#0DC8C8"/>
-  <path fill-rule="evenodd" clip-rule="evenodd"
-    d="M 22.78,14.25 L 26.89,14.47 L 26.89,17.53 L 22.78,17.75 L 22.03,19.55 L 24.78,22.62 L 22.62,24.78 L 19.55,22.03 L 17.75,22.78 L 17.53,26.89 L 14.47,26.89 L 14.25,22.78 L 12.45,22.03 L 9.38,24.78 L 7.22,22.62 L 9.97,19.55 L 9.22,17.75 L 5.11,17.53 L 5.11,14.47 L 9.22,14.25 L 9.97,12.45 L 7.22,9.38 L 9.38,7.22 L 12.45,9.97 L 14.25,9.22 L 14.47,5.11 L 17.53,5.11 L 17.75,9.22 L 19.55,9.97 L 22.62,7.22 L 24.78,9.38 L 22.03,12.45 Z
-    M 19.00,16.00 A 3,3 0 1 0 13.00,16.00 A 3,3 0 1 0 19.00,16.00 Z"
-    fill="#0a0a0a"/>
-</svg>`;
+/* ---- Gear logo SVG (8-tooth gear on teal bg) ---- */
+const GEAR_LOGO_SVG = (function() {
+  var s = '<svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">';
+  s += '<rect width="32" height="32" rx="8" fill="#0DC8C8"/>';
+  s += '<path fill-rule="evenodd" clip-rule="evenodd" d="';
+  s += 'M 22.78,14.25 L 26.89,14.47 L 26.89,17.53 L 22.78,17.75 L 22.03,19.55 ';
+  s += 'L 24.78,22.62 L 22.62,24.78 L 19.55,22.03 L 17.75,22.78 L 17.53,26.89 ';
+  s += 'L 14.47,26.89 L 14.25,22.78 L 12.45,22.03 L 9.38,24.78 L 7.22,22.62 ';
+  s += 'L 9.97,19.55 L 9.22,17.75 L 5.11,17.53 L 5.11,14.47 L 9.22,14.25 ';
+  s += 'L 9.97,12.45 L 7.22,9.38 L 9.38,7.22 L 12.45,9.97 L 14.25,9.22 ';
+  s += 'L 14.47,5.11 L 17.53,5.11 L 17.75,9.22 L 19.55,9.97 ';
+  s += 'L 22.62,7.22 L 24.78,9.38 L 22.03,12.45 Z ';
+  s += 'M 19.00,16.00 A 3,3 0 1 0 13.00,16.00 A 3,3 0 1 0 19.00,16.00 Z"';
+  s += ' fill="#0a0a0a"/>';
+  s += '</svg>';
+  return s;
+}());
 
 /* ---- Build nav ---- */
 function buildNav(activeKey) {
-  const pageName = NAV.find(n => n.key === activeKey)?.label || 'GearLab';
-  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  var match = NAV.find(function(n) { return n.key === activeKey; });
+  var pageName = match ? match.label : 'GearLab';
 
-  const navHtml = NAV.map(n => {
-    const soonBadge = n.soon ? '<span class="nav-badge-soon">Soon</span>' : '';
-    const cls = `nav-item ${activeKey === n.key ? 'active' : ''} ${n.soon ? 'soon' : ''}`;
-    const href = n.soon ? '#' : n.href;
-    const onclick = n.soon ? 'onclick="return false"' : '';
-    return `<a href="${href}" ${onclick} class="${cls}">
-      <span class="nav-icon">${navIcon(n.icon)}</span>${n.label}${soonBadge}
-    </a>`;
+  var navHtml = NAV.map(function(n) {
+    var sec = n.section ? '<div class="sidebar-section">' + n.section + '</div>' : '';
+    var soonBadge = n.soon ? '<span class="nav-badge-soon">Soon</span>' : '';
+    var cls = 'nav-item' + (activeKey === n.key ? ' active' : '') + (n.soon ? ' soon' : '');
+    var href = n.soon ? '#' : n.href;
+    var oc = n.soon ? ' onclick="return false"' : '';
+    return sec
+      + '<a href="' + href + '"' + oc + ' class="' + cls + '">'
+      + '<span class="nav-icon">' + navIcon(n.icon) + '</span>'
+      + n.label + soonBadge + '</a>';
   }).join('');
 
-  document.body.insertAdjacentHTML('afterbegin', `
-    <nav class="sidebar">
-      <div class="sidebar-logo">
-        ${GEAR_LOGO_SVG}
-        <div class="sidebar-logo-text"><span>Gear</span>Lab</div>
-      </div>
-      <div class="sidebar-section">Calculators</div>
-      ${navHtml}
-      <div class="sidebar-bottom">
-        <div class="sidebar-credit">Built by Suji Kumar C</div>
-        <a class="nav-item" onclick="toggleTheme();return false;" href="#">
-          <span class="nav-icon">${navIcon('moon')}</span>Toggle Theme
-        </a>
-      </div>
-    </nav>
-    <div class="topbar">
-      <div class="topbar-left">
-        <div class="topbar-breadcrumb">GearLab &nbsp;/&nbsp; <strong>${pageName}</strong></div>
-      </div>
-      <div class="topbar-actions">
-        <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">${navIcon('moon')}</button>
-      </div>
-    </div>
-  `);
-  document.getElementById('toast-container') ||
+  var sidebar = '<nav class="sidebar">'
+    + '<div class="sidebar-logo">' + GEAR_LOGO_SVG
+    + '<div class="sidebar-logo-text"><span>Gear</span>Lab</div></div>'
+    + navHtml
+    + '<div class="sidebar-bottom">'
+    + '<div class="sidebar-credit">Built by Suji Kumar C</div>'
+    + '<a class="nav-item" onclick="toggleTheme();return false;" href="#">'
+    + '<span class="nav-icon">' + navIcon('moon') + '</span>Toggle Theme</a>'
+    + '</div></nav>';
+
+  var topbar = '<div class="topbar">'
+    + '<div class="topbar-left"><div class="topbar-breadcrumb">GearLab'
+    + ' &nbsp;/&nbsp; <strong>' + pageName + '</strong></div></div>'
+    + '<div class="topbar-actions">'
+    + '<button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">'
+    + navIcon('moon') + '</button></div></div>';
+
+  document.body.insertAdjacentHTML('afterbegin', sidebar + topbar);
+  if (!document.getElementById('toast-container')) {
     document.body.insertAdjacentHTML('beforeend', '<div id="toast-container"></div>');
+  }
 }
 
 /* ---- Math helpers ---- */
@@ -102,15 +116,20 @@ const round = (v, d = 3) => isNaN(v) || !isFinite(v) ? null : Math.round(v * 10*
 const fmt = (v, d = 3) => v === null || v === undefined ? '—' : round(v, d);
 
 /* ---- Toast ---- */
-function toast(msg, type = 'pass') {
-  const c = document.getElementById('toast-container'); if (!c) return;
-  const el = document.createElement('div'); el.className = `toast ${type}`;
+function toast(msg, type) {
+  if (!type) type = 'pass';
+  const c = document.getElementById('toast-container');
+  if (!c) return;
+  const el = document.createElement('div');
+  el.className = 'toast ' + type;
   el.textContent = msg;
-  c.appendChild(el); setTimeout(() => el.remove(), 3000);
+  c.appendChild(el);
+  setTimeout(function() { el.remove(); }, 3000);
 }
 
 /* ---- Set result ---- */
-function setResult(id, value, decimals = 3) {
+function setResult(id, value, decimals) {
+  if (decimals === undefined) decimals = 3;
   const el = document.getElementById(id);
   if (!el) return;
   if (value === null || value === undefined || isNaN(value) || !isFinite(value)) {

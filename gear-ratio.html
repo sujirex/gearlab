@@ -147,7 +147,7 @@
           <h4>Planetary Gear Ratios</h4>
           <div class="formula-row"><span class="formula-name">Fixed Ring (Config 1)</span><span class="formula-expr">i = 1 + Zr/Zs</span></div>
           <div class="formula-row"><span class="formula-name">Fixed Carrier (Config 2)</span><span class="formula-expr">i = &minus;Zr/Zs</span></div>
-          <div class="formula-row"><span class="formula-name">Fixed Sun (Config 3)</span><span class="formula-expr">i = Zr/(Zr+Zs)</span></div>
+          <div class="formula-row"><span class="formula-name">Fixed Sun (Config 3)</span><span class="formula-expr">i = (Zr+Zs)/Zr</span></div>
           <div class="formula-row"><span class="formula-name">Ring teeth check</span><span class="formula-expr">Zr = Zs + 2&times;Zp</span></div>
         </div>
       </div>
@@ -236,7 +236,7 @@ function calcPlanetary() {
   let i, cfgName;
   if(cfg===1){ i=1+zr/zs; cfgName='Fixed Ring, Output: Carrier'; }
   else if(cfg===2){ i=-zr/zs; cfgName='Fixed Carrier, Output: Ring (reversed)'; }
-  else { i=zr/(zr+zs); cfgName='Fixed Sun, Input: Ring, Output: Carrier'; }
+  else { i=(zr+zs)/zr; cfgName='Fixed Sun, Input: Ring, Output: Carrier'; }
   const nout=n1/Math.abs(i);
   setResult('p-res-i', Math.abs(i), 3);
   setResult('p-res-nout', nout, 1);

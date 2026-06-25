@@ -43,9 +43,9 @@ function navIcon(type) {
   return icons[type] || '';
 }
 
-/* ---- Gear logo SVG (8-tooth gear on neon blue) ---- */
+/* ---- Gear logo SVG (8-tooth gear on teal) ---- */
 const GEAR_LOGO_SVG = `<svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="32" height="32" rx="8" fill="#00BFFF"/>
+  <rect width="32" height="32" rx="8" fill="#0DC8C8"/>
   <path fill-rule="evenodd" clip-rule="evenodd"
     d="M 22.78,14.25 L 26.89,14.47 L 26.89,17.53 L 22.78,17.75 L 22.03,19.55 L 24.78,22.62 L 22.62,24.78 L 19.55,22.03 L 17.75,22.78 L 17.53,26.89 L 14.47,26.89 L 14.25,22.78 L 12.45,22.03 L 9.38,24.78 L 7.22,22.62 L 9.97,19.55 L 9.22,17.75 L 5.11,17.53 L 5.11,14.47 L 9.22,14.25 L 9.97,12.45 L 7.22,9.38 L 9.38,7.22 L 12.45,9.97 L 14.25,9.22 L 14.47,5.11 L 17.53,5.11 L 17.75,9.22 L 19.55,9.97 L 22.62,7.22 L 24.78,9.38 L 22.03,12.45 Z
     M 19.00,16.00 A 3,3 0 1 0 13.00,16.00 A 3,3 0 1 0 19.00,16.00 Z"
@@ -87,7 +87,6 @@ function buildNav(activeKey) {
         <div class="topbar-breadcrumb">GearLab &nbsp;/&nbsp; <strong>${pageName}</strong></div>
       </div>
       <div class="topbar-actions">
-        <span style="font-size:11px;color:var(--primary);background:var(--neon-bg);padding:3px 10px;border:1px solid rgba(0,191,255,.25);border-radius:20px;font-weight:700">gearlab.sujikumar.com</span>
         <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">${navIcon('moon')}</button>
       </div>
     </div>

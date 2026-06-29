@@ -141,6 +141,14 @@ function buildNav(activeKey) {
   if (!document.getElementById('toast-container')) {
     document.body.insertAdjacentHTML('beforeend', '<div id="toast-container"></div>');
   }
+
+  // Expose current page context for FORGE AI widget
+  window.GEARLAB_PAGE = { key: activeKey, label: pageName };
+
+  // Inject FORGE AI widget
+  var forgeScript = document.createElement('script');
+  forgeScript.src = 'js/ai.js';
+  document.body.appendChild(forgeScript);
 }
 
 /* ---- Math helpers ---- */
@@ -164,13 +172,4 @@ function toast(msg, type) {
 /* ---- Set result ---- */
 function setResult(id, value, decimals) {
   if (decimals === undefined) decimals = 3;
-  const el = document.getElementById(id);
-  if (!el) return;
-  if (value === null || value === undefined || isNaN(value) || !isFinite(value)) {
-    el.textContent = '—';
-    el.classList.add('result-empty');
-  } else {
-    el.textContent = fmt(value, decimals);
-    el.classList.remove('result-empty');
-  }
-}
+  const el = document.getElementById(id

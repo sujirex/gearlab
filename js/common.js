@@ -172,4 +172,13 @@ function toast(msg, type) {
 /* ---- Set result ---- */
 function setResult(id, value, decimals) {
   if (decimals === undefined) decimals = 3;
-  const el = document.getElementById(id
+  const el = document.getElementById(id);
+  if (!el) return;
+  if (value === null || value === undefined || isNaN(value) || !isFinite(value)) {
+    el.textContent = '—';
+    el.classList.add('result-empty');
+  } else {
+    el.textContent = fmt(value, decimals);
+    el.classList.remove('result-empty');
+  }
+}

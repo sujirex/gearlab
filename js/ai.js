@@ -297,7 +297,7 @@
     if (role === 'assistant') {
       var avatar = document.createElement('div');
       avatar.className = 'forge-mini-avatar';
-      avatar.textContent = '⚙';
+      avatar.textContent = '👑';
       row.appendChild(avatar);
     }
 
@@ -323,7 +323,7 @@
     typingRow.className = 'forge-row assistant';
     var avatar = document.createElement('div');
     avatar.className = 'forge-mini-avatar';
-    avatar.textContent = '⚙';
+    avatar.textContent = '👑';
     var indicator = document.createElement('div');
     indicator.className = 'forge-typing';
     [0, 1, 2].forEach(function(i) {
@@ -415,7 +415,7 @@
     isOpen = false;
     panel.style.display = 'none';
     forgeBtn.classList.remove('open');
-    forgeBtn.innerHTML = '<span style="font-size:18px">⚙</span><span>Ask FORGE</span>';
+    forgeBtn.innerHTML = '<span style="font-size:18px">👑</span><span>Ask REX</span>';
     if (triggerRing1) { triggerRing1.style.display = ''; triggerRing2.style.display = ''; }
   }
 
@@ -430,7 +430,7 @@
     panel = document.createElement('div');
     panel.id = 'forge-panel';
     panel.setAttribute('role', 'dialog');
-    panel.setAttribute('aria-label', 'FORGE — GearLab Engineering AI');
+    panel.setAttribute('aria-label', 'REX — GearLab Engineering AI');
     panel.style.display = 'none';
 
     // Border ring
@@ -447,12 +447,12 @@
 
     var avatar = document.createElement('div');
     avatar.id = 'forge-avatar';
-    avatar.textContent = '⚙';
+    avatar.textContent = '👑';
 
     var nameWrap = document.createElement('div');
     var nameEl = document.createElement('div');
     nameEl.id = 'forge-name';
-    nameEl.textContent = 'FORGE';
+    nameEl.textContent = 'REX';
     var subEl = document.createElement('div');
     subEl.id = 'forge-subtitle';
     subEl.textContent = 'GearLab Engineering AI';
@@ -475,7 +475,7 @@
     var closeBtn = document.createElement('button');
     closeBtn.id = 'forge-close';
     closeBtn.textContent = '✕';
-    closeBtn.setAttribute('aria-label', 'Close FORGE');
+    closeBtn.setAttribute('aria-label', 'Close REX');
     closeBtn.onclick = closePanel;
 
     headerRight.appendChild(onlineDiv);
@@ -500,7 +500,7 @@
     inputEl = document.createElement('input');
     inputEl.id = 'forge-input';
     inputEl.type = 'text';
-    inputEl.placeholder = 'Ask FORGE anything…';
+    inputEl.placeholder = 'Ask REX anything…';
     inputEl.setAttribute('aria-label', 'Engineering question');
     inputEl.onkeydown = function(e) {
       if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); }
@@ -529,8 +529,8 @@
 
     forgeBtn = document.createElement('button');
     forgeBtn.id = 'forge-btn';
-    forgeBtn.setAttribute('aria-label', 'Open FORGE — GearLab AI');
-    forgeBtn.innerHTML = '<span style="font-size:18px">⚙</span><span>Ask FORGE</span>';
+    forgeBtn.setAttribute('aria-label', 'Open REX — GearLab AI');
+    forgeBtn.innerHTML = '<span style="font-size:18px">👑</span><span>Ask REX</span>';
     forgeBtn.onclick = function() { isOpen ? closePanel() : openPanel(); };
 
     trigger.appendChild(triggerRing1);
@@ -551,3 +551,4 @@
   }
 
 })();
+                          

@@ -88,7 +88,7 @@ function navIcon(type) {
 /* ---- Gear logo SVG (8-tooth gear on teal bg) ---- */
 const GEAR_LOGO_SVG = (function() {
   var s = '<svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">';
-  s += '<rect width="32" height="32" rx="8" fill="#0DC8C8"/>';
+  s += '<rect width="32" height="32" rx="8" fill="#00BFFF"/>';
   s += '<path fill-rule="evenodd" clip-rule="evenodd" d="';
   s += 'M 22.78,14.25 L 26.89,14.47 L 26.89,17.53 L 22.78,17.75 L 22.03,19.55 ';
   s += 'L 24.78,22.62 L 22.62,24.78 L 19.55,22.03 L 17.75,22.78 L 17.53,26.89 ';

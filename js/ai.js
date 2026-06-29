@@ -539,7 +539,7 @@
     document.body.appendChild(trigger);
 
     // Welcome message + suggestions
-    addMessage('assistant', 'Hey! I\'m FORGE — GearLab\'s engineering AI. I know ISO 6336, AGMA 2001, gear formulas, materials, and service factors inside out. Ask me anything about your design. ⚙️');
+    addMessage('assistant', 'Hey! I\'m REX — GearLab\'s engineering AI. I know ISO 6336, AGMA 2001, gear formulas, materials, and service factors inside out. Ask me anything about your design. 👑');
     addSuggestions();
   }
 

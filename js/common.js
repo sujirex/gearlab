@@ -1,16 +1,38 @@
 /* ===== GearLab — Shared Nav & Utilities ===== */
 
 /* ---- Theme ---- */
+// Saved choice wins; otherwise follow the device setting.
+function gearlabSavedTheme() {
+  try { var t = localStorage.getItem('gearlab-theme'); return (t === 'light' || t === 'dark') ? t : null; } catch (e) { return null; }
+}
 function initTheme() {
-  const saved = localStorage.getItem('gearlab-theme') || 'dark';
-  document.documentElement.setAttribute('data-theme', saved);
+  var t = gearlabSavedTheme() || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  document.documentElement.setAttribute('data-theme', t);
 }
 function toggleTheme() {
   const cur = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
   document.documentElement.setAttribute('data-theme', cur);
-  localStorage.setItem('gearlab-theme', cur);
+  try { localStorage.setItem('gearlab-theme', cur); } catch (e) {}
 }
 initTheme();
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function () { if (!gearlabSavedTheme()) initTheme(); });
+
+/* ---- Mobile menu ---- */
+function toggleMenu(force) {
+  var open = typeof force === 'boolean' ? force : !document.body.classList.contains('nav-open');
+  document.body.classList.toggle('nav-open', open);
+  var b = document.getElementById('menu-toggle');
+  if (b) { b.setAttribute('aria-expanded', open); b.setAttribute('aria-label', open ? 'Close menu' : 'Open menu'); }
+}
+
+/* ---- sujikumar.com credit badge (one place for every page) ---- */
+document.addEventListener('DOMContentLoaded', function () {
+  if (document.querySelector('.ss-credit')) return;
+  var div = document.createElement('div');
+  div.className = 'ss-credit';
+  div.innerHTML = '<a href="https://sujikumar.com/" rel="author" title="Built by Suji Kumar C — Digital Maritime Engineer"><img src="favicon.svg" alt="" width="20" height="20"><span>Built by <b>Suji Kumar C</b> · sujikumar.com</span></a>';
+  document.body.appendChild(div);
+});
 
 /* ---- Nav definition ---- */
 const NAV = [
@@ -121,8 +143,8 @@ function buildNav(activeKey) {
   }).join('');
 
   var sidebar = '<nav class="sidebar">'
-    + '<div class="sidebar-logo">' + GEAR_LOGO_SVG
-    + '<div class="sidebar-logo-text"><span>Gear</span>Lab</div></div>'
+    + '<a class="sidebar-logo" href="index.html" style="text-decoration:none"><img src="favicon.svg" alt="SS emblem" width="36" height="36">'
+    + '<div class="sidebar-logo-text"><span>Gear</span>Lab<small>Gearbox calculators</small></div></a>'
     + navHtml
     + '<div class="sidebar-bottom">'
     + '<div class="sidebar-credit">Built by Suji Kumar C</div>'
@@ -131,13 +153,15 @@ function buildNav(activeKey) {
     + '</div></nav>';
 
   var topbar = '<div class="topbar">'
-    + '<div class="topbar-left"><div class="topbar-breadcrumb">GearLab'
+    + '<div class="topbar-left"><button class="menu-toggle" id="menu-toggle" onclick="toggleMenu()" aria-label="Open menu" aria-expanded="false">'
+    + '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>'
+    + '<div class="topbar-breadcrumb">GearLab'
     + ' &nbsp;/&nbsp; <strong>' + pageName + '</strong></div></div>'
     + '<div class="topbar-actions">'
     + '<button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">'
     + navIcon('moon') + '</button></div></div>';
 
-  document.body.insertAdjacentHTML('afterbegin', sidebar + topbar);
+  document.body.insertAdjacentHTML('afterbegin', sidebar + '<div class="sidebar-backdrop" onclick="toggleMenu(false)"></div>' + topbar);
   if (!document.getElementById('toast-container')) {
     document.body.insertAdjacentHTML('beforeend', '<div id="toast-container"></div>');
   }

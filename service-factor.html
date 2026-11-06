@@ -1,9 +1,12 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head><meta charset="UTF-8"/>
   <meta name="author" content="Suji Kumar C" /><meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Service Factor — GearLab</title>
 <link rel="icon" href="favicon.svg"/>
+<meta name="theme-color" content="#FBFBFD" media="(prefers-color-scheme: light)"/>
+<meta name="theme-color" content="#07080D" media="(prefers-color-scheme: dark)"/>
+<link rel="preload" href="fonts/geist.woff2" as="font" type="font/woff2" crossorigin/>
 <link rel="stylesheet" href="css/style.css"/>
 </head>
 <body>
@@ -235,11 +238,11 @@ const HOURS_KH = { '0.5': 0.80, '3': 0.90, '10': 1.00, '24': 1.25 };
 
 // Gearbox classes
 function getGearboxClass(SF, Preq) {
-  if (SF < 1.0) return {cls:'ERROR', desc:'Service factor below 1.0 — gearbox will be undersized.', color:'#ef4444'};
-  if (SF < 1.25) return {cls:'Light Duty', desc:'Suitable for uniform load, short daily operation. Standard commercial gearbox.', color:'#38bdf8'};
-  if (SF < 1.5)  return {cls:'Medium Duty', desc:'Standard industrial gearbox. Adequate for most conveyor and pump applications.', color:'#22c55e'};
-  if (SF < 2.0)  return {cls:'Heavy Duty', desc:'Reinforced industrial gearbox required. Suitable for crane, compressor, extruder.', color:'#f59e0b'};
-  return {cls:'Extra Heavy Duty', desc:'Special-purpose or reinforced gearbox needed. Consult manufacturer for crusher, ball mill, etc.', color:'#f97316'};
+  if (SF < 1.0) return {cls:'ERROR', desc:'Service factor below 1.0 — gearbox will be undersized.', color:'var(--fail)'};
+  if (SF < 1.25) return {cls:'Light Duty', desc:'Suitable for uniform load, short daily operation. Standard commercial gearbox.', color:'var(--info)'};
+  if (SF < 1.5)  return {cls:'Medium Duty', desc:'Standard industrial gearbox. Adequate for most conveyor and pump applications.', color:'var(--pass)'};
+  if (SF < 2.0)  return {cls:'Heavy Duty', desc:'Reinforced industrial gearbox required. Suitable for crane, compressor, extruder.', color:'var(--warn)'};
+  return {cls:'Extra Heavy Duty', desc:'Special-purpose or reinforced gearbox needed. Consult manufacturer for crusher, ball mill, etc.', color:'var(--spark)'};
 }
 
 function calc(showToast = false) {
@@ -275,7 +278,7 @@ function calc(showToast = false) {
   recC.innerHTML = `
     <div style="font-size:22px;font-weight:800;color:${color};margin-bottom:6px">${cls}</div>
     <div style="font-size:13px;color:var(--text-muted)">${desc}</div>
-    <div style="margin-top:12px;padding:10px 14px;background:var(--neon-bg);border-radius:8px;border:1px solid rgba(0,191,255,.15);font-size:12px">
+    <div style="margin-top:12px;padding:10px 14px;background:var(--neon-bg);border-radius:8px;border:1px solid color-mix(in srgb, var(--g3) 30%, var(--border));font-size:12px">
       <strong>Specify gearbox rated at:</strong>
       &nbsp;&nbsp;&bull;&nbsp; Power ≥ <strong>${Preq.toFixed(2)} kW</strong>
       &nbsp;&nbsp;&bull;&nbsp; Torque ≥ <strong>${Treq.toFixed(0)} N·m</strong>
@@ -311,6 +314,5 @@ function clearCalc() {
 document.getElementById('btn-clear').addEventListener('click', clearCalc);
 calc();
 </script>
-<!-- sujikumar.com credit --><style id="ss-credit-css">.ss-credit{display:flex;justify-content:center;padding:16px 12px 20px;font:500 12px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}.ss-credit a{display:inline-flex;align-items:center;gap:8px;padding:5px 12px 5px 5px;border-radius:999px;color:inherit;opacity:.78;text-decoration:none;border:1px solid rgba(148,163,184,.35);transition:opacity .2s,border-color .2s}.ss-credit a:hover{opacity:1;border-color:#8B5CF6}.ss-credit img{width:20px;height:20px;border-radius:5px;display:block}.ss-credit b{font-weight:600}.ss-credit--fixed{position:fixed;left:10px;bottom:10px;z-index:9999;padding:0}.ss-credit--fixed a{background:rgba(11,15,20,.72);color:#e6eaf0;opacity:.9;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}@media print{.ss-credit{display:none}}</style><div class="ss-credit"><a href="https://sujikumar.com/" rel="author" title="Built by Suji Kumar C — Digital Maritime Engineer"><img src="favicon.svg" alt="" width="20" height="20"><span>Built by <b>Suji Kumar C</b> · sujikumar.com</span></a></div>
 </body>
 </html>
